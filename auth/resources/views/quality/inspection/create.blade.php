@@ -98,11 +98,7 @@
                                                 <div class="row">
                                                     <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
                                                     <div class="col-md-5">
-                                                        <textarea name="description" class="form-control" rows="3" required autofocus>  
-                                                            @if(isset($inspection->description))
-                                                                {{ $inspection->description }} 
-                                                            @endif
-                                                        </textarea>                                     
+                                                        <textarea name="description" class="form-control" rows="3" required autofocus>@if(isset($inspection->description)){{ $inspection->description }}@endif</textarea>                                     
                                                     </div>
                                                 </div>
                                             </div>     
@@ -124,14 +120,20 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <label for="caracteristique" class="text-right p-t-10 col-md-4">{{ __('Caractéristique') }}</label>
+                                                    <label for="caracteristiquep" class="text-right p-t-10 col-md-4">{{ __('Caractéristique') }}</label>
                                                     <div class="col-md-5">
-                                                        <select id="caracteristique" class="form-control" name="caracteristique" required>
-                                                            <option value="" disabled selected>Selectionnez la caractéristique</option>
-                                                            @if (isset($inspection->lot))
-                                                                <option value="{{ $inspection->lot->caracteristiquep }}" selected> {{ $inspection->lot->caracteristiquep }}</option>
+                                                        <select id="caracteristique" class="form-control" name="caracteristiquep">
+                                                            @if(isset($inspection->lot))
+                                                                @foreach (App\Models\Caracteristique::where('produit_id','=',$inspection->lot->produit->id)->get() as $c)
+                                                                    <option value="{{ $c->nom }}"
+                                                                        @if(isset($inspection->lot->caracteristiquep) && $inspection->lot->caracteristiquep == $c->nom)
+                                                                            selected
+                                                                        @endif>
+                                                                        {{ $c->nom }}
+                                                                    </option>
+                                                                @endforeach
                                                             @endif
-                                                            </select>
+                                                        </select> 
                                                     </div>
                                                 </div>
                                             </div>
@@ -148,12 +150,19 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <label for="produit" class="text-right p-t-10 col-md-4">{{ __("Image d'article") }}</label>
+                                                    <label for="produit" class="text-right p-t-10 col-md-4">{{ __("Image du Lot") }}</label>
                                                     <div class="col-md-5">
-                                                        <input type="file" {{ (!empty($inspection->productimg)) ? "value='$inspection->productimg'" : ''}} 
-                                                        class="form-control-file" name="productimg" id="productimg" aria-describedby="fileHelp">
-                                                        <small id="fileHelp" class="form-text text-muted">Please upload a valid image file. 
-                                                        Size of image should not be more than 2MB.</small>
+                                                        @if(isset($inspection->productimg))
+                                                        <div id="fiche">
+                                                            <a href="{{ asset('storage/app/lotImage/'.$inspection->productimg) }}" target="_blank">
+                                                                <img src="{{ asset('storage/app/lotImage/'.$inspection->productimg) }}" /></a>
+                                                        </div>
+                                                        @endif
+                                                        <input type="file" class="form-control-file" name="productimg" id="productimg" 
+                                                        aria-describedby="fileHelp">
+                                                        <small id="fileHelp" class="form-text text-muted">Veuillez choisir un fichier valide
+                                                            (jpeg,png,jpg,gif,svg). 
+                                                        </small>
                                                     </div>
                                                 </div>
                                             </div>     
@@ -308,7 +317,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            @if(isset($inspection->resultats) && $inspection->resultats=="Les réponses des examens ne sont pas toutes correctes")
                                             <div class="form-group">
                                                 <div class="row">
                                                     <label for="quantiteD" class="text-right p-t-10 col-md-4">{{ __('Quantité Défectueuse') }}</label>
@@ -321,8 +330,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            @if(isset($inspection) && $inspection->resultats=="Les réponses des examens ne sont pas toutes correctes")
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-4"></div>
@@ -341,11 +348,7 @@
                                                 <div class="row">
                                                     <label for="commentaire" class="text-right p-t-10 col-md-4">{{ __('Commentaires') }}</label>
                                                     <div class="col-md-5">
-                                                        <textarea name="commentaire" class="form-control" rows="3"  autofocus>  
-                                                            @if(isset($inspection))
-                                                                {{ $inspection->commentaire }}
-                                                            @endif
-                                                        </textarea>
+                                                        <textarea name="commentaire" class="form-control" rows="3"  autofocus>@if(isset($inspection)){{ $inspection->commentaire }}@endif</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -359,7 +362,7 @@
                                                     </a>
                                                     @endisset
                                                     <button class="btn btn-primary sweet-success btn-addon m-b-10 m-l-5" type="submit">
-                                                        <i class="ti-angle-double-right"></i>{{ __('Suivant') }}
+                                                        <i class="ti-angle-double-right"></i>{{ __('Enregistrer') }}
                                                     </button> 
                                                 </div>
                                             </div>

@@ -14,16 +14,16 @@ class AtelierController extends Controller
 {   
     
     public function export(){
-        return Excel::download(new AteliersExport, 'Ateliers.xlsx');
+        return Excel::download(new AteliersExport(), 'Ateliers.xlsx');
     }
-   
+
     public function import(){
         Excel::import(new AteliersImport,request()->file('file'));
         return back();
     }
 
     public function index(){
-        $ateliers = Atelier::paginate(5);
+        $ateliers = Atelier::paginate(10);
         return view('simple.atelier.index',compact('ateliers'));
     }
 

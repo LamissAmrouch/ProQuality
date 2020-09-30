@@ -14,6 +14,7 @@ class Atelier extends Model
     {
         return $this->hasMany('App\Models\Audit');
     }
+    
     public function procedes()
     {
         return $this->hasMany('App\Models\Procede');

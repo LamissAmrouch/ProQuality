@@ -77,11 +77,7 @@
                                             <div class="row">
                                                 <label for="contenu" class="text-right p-t-10 col-md-4">{{ __('Contenu') }}</label>
                                                 <div class="col-md-5">
-                                                    <textarea name="contenu" class="form-control" rows="3" required>  
-                                                        @if(isset($regle))
-                                                        {{ $regle->contenu }}
-                                                        @endif
-                                                     </textarea>                  
+                                                    <textarea name="contenu" class="form-control" rows="3" required>@if(isset($regle)){{ $regle->contenu }}@endif</textarea>                  
                                                 </div>
                                             </div>
                                         </div>

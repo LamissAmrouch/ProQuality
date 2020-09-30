@@ -31,6 +31,9 @@
               </div>
               <div class="col-lg-6">
                 <div class="text-right">  
+                    <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('audit.export') }}">
+                        <i class="ti-upload"></i>Exporter journal
+                    </a>
                     <a href="{{ route('audit.create')}}">
                       <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
                         <i class="ti-plus"></i>Ajouter un audit</button>                 
@@ -38,22 +41,7 @@
                   </div>        
                 </div>
               </div>
-                      <br>
-                      <!-- to Show success message -->
-                      @if(session('successMsg'))
-                          <div id="success-msg" style="display: none;"> {{ session('successMsg') }}
-                          </div>
-                          <script type="text/javascript">
-                              $(document).ready(function(){
-                                  swal({
-                                    title: "Bravo!",
-                                    text: $("#success-msg").text(),
-                                    type: "success",
-                                    showConfirmButton: true
-                                  });                  
-                            });
-                          </script>
-                      @endif   
+              <br>
             <br>
             <br>
             <div class="card-body">
@@ -62,7 +50,7 @@
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Titre</th>
-                                    <th scope="col">Description</th>
+                                    <th scope="col">Procédé</th>
                                     <th scope="col">Etat</th>
                                     <th scope="col">Action </th>
                                 </tr>
@@ -72,7 +60,12 @@
                                   <tr>
                                     <th scope="row"> <span class="badge badge-primary">{{ $audit->id }} </span></th>
                                     <td>{{ $audit->titre }}</td>
-                                    <td>{{ $audit->description }}</td>
+                                    @if( isset($audit->procede->designation))
+                                      <td>{{ $audit->procede->designation }}</td>
+                                    @else
+                                      <td>-</td>
+                                    @endif
+                                    </td>
                                     <td>
                                       @if ($audit->etat == "nouveau")
                                           <span class="badge badge-info">
@@ -84,7 +77,7 @@
                                         {{ $audit->etat }}</span>
                                     </td> 
                                     <td>
-                                      <a style="text-decoration:none;color:#ffffff;" href=""> 
+                                      <a style="text-decoration:none;color:#ffffff;" href=" {{ route('audit.view',$audit) }}"> 
                                         <button class="btn btn-info btn-sm"> 
                                             <i class="ti-eye" aria-hidden="true"></i> 
                                         </button>

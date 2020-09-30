@@ -10,15 +10,13 @@
 	
 	<!-- ================= Favicon ================== -->
     <!-- Standard -->
-    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
-    <!-- Retina iPad Touch Icon-->
-    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
-    <!-- Retina iPhone Touch Icon-->
-    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
-    <!-- Standard iPad Touch Icon--> 
-    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
-    <!-- Standard iPhone Touch Icon--> 
-    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+ 
+    <link rel="shortcut icon" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('public/logo/ProQuality_small.png') }}"> 
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('public/logo/ProQuality_small.png') }}">
+
 	
 	<!-- Styles -->
     <link href="{{ asset('public/assets/fontAwesome/css/fontawesome-all.min.css') }}" rel="stylesheet">
@@ -28,11 +26,11 @@
     <link href="{{ asset('public/assets/css/style.css') }}" rel="stylesheet">
 </head>
 
-<body class="background-login" style="background-image: url({{ asset('public/assets/images/bg/usb.jpg')}} );">
+<body class="background-login m-t-100" style="background-image: url({{ asset('public/assets/images/bg/usb.jpg')}} );">
 	<div class="login">
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-6 col-lg-offset-3">
+				<div class="col-8 col-md-6 col-md-offset-3">
 					<div class="login-content">
 						<div class="login-logo">
 						</div>
@@ -70,10 +68,7 @@
 									@enderror
 								</div>
 								<div class="checkbox">
-									<label for="remember">
-                                        <input type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                        {{ __('Se souvenir de moi') }}
-									</label>
+								
 								
 									<label class="pull-right">
 										@if (Route::has('password.request'))
@@ -83,9 +78,11 @@
 										@endif
 									</label>
 								</div>	
+								<br> <br>
 								
-								<div class="center" style="margin-left:40%;margin-right:40%;">
-									<button type="submit" class="btn btn-default">Login</button>
+		
+								<div class="center" style="margin-left:35%;margin-right:35%;">
+									<button type="submit" class="btn btn-default">Se connecter</button>
                                 </div>
 							</form>
 						</div>

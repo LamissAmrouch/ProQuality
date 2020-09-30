@@ -211,8 +211,7 @@ class StatistiquesController extends Controller{
 
     }
             
-    public function indexRetourClient($year)
-    { 
+    public function indexRetourClient($year){ 
         // retour client par produit ou article
         $produits =  Produit::where('type', '=' ,'Fini')->get();
         $nomsProduit =  Produit::where('type', '=' ,'Fini')->pluck('nom');
@@ -351,8 +350,7 @@ class StatistiquesController extends Controller{
         return view('quality.statistiques.indexRC',compact('chart','chartClient','yearDisplayed'));
     }
 
-    public function indexRetourProduction($year)
-    {   
+    public function indexRetourProduction($year){   
                 
         // Histogramme 1 : retour production par produit ou article
         $produits =  Produit::where('type', '=' ,'Fini')->get();
@@ -491,9 +489,7 @@ class StatistiquesController extends Controller{
     }
 
 
-    public function indexRetourFournisseur($year)
-    {   
-                  
+    public function indexRetourFournisseur($year){                     
         // Histogramme 1 : retour fournisseur par matiere premiere
         $MPs =  Produit::where('type', '=' ,'Matiere premiere')->get();
         $array = array();

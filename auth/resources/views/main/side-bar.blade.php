@@ -4,12 +4,14 @@
                 <ul id='ul-side-bar'>
 
                     <!-- use Spatie notation to access the admin menu items -->
+                    @role('gestionnaire')
                       <li class="{{ request()->routeIs('home') ? 'active' : '' }} m-t-15"><a  href="{{ route('home')}}" ><i class="ti-home"></i> Accueil </a></li>     
+                    @endrole
                     @role('admin')
-                      <li class="{{ request()->routeIs('user.*') ? 'active' : '' }}"><a  href="{{ route('user.dashbord') }}"><i class="ti-user"></i> Utilisateurs</a></li>
+                      <li class="{{ request()->routeIs('user.*') ? 'active' : '' }} m-t-15"><a  href="{{ route('user.dashbord') }}"><i class="ti-user"></i> Utilisateurs</a></li>
                       <li class="{{ request()->routeIs('role.*') ? 'active' : '' }}"><a  href="{{ route('role.dashbord') }}"><i class="ti-lock"></i> Roles</a></li>
                       <li class="{{ request()->routeIs('permission.*') ? 'active' : '' }}"><a  href="{{ route('permission.dashbord')   }}"><i class="ti-key"></i> Permissions </a></li>
-                      <li ><a ><i class="ti-settings"></i> Configuration </a></li>
+                      <!--<li ><a ><i class="ti-settings"></i> Configuration </a></li>-->
                     @endrole
                     @hasanyrole('admin|gestionnaire')
                     <li class="{{ request()->routeIs('statistiques.*') ? 'active' : '' }}">
@@ -28,7 +30,7 @@
                     </li>
                     @endhasanyrole
                     @hasanyrole('simple|gestionnaire')
-                    <li>
+                    <li @role('simple') class="m-t-15" @endrole>
                         <a class="sidebar-sub-toggle"><i class="ti-bell"></i>{{__(' Alertes')}}<span class="sidebar-collapse-icon ti-angle-down"></span></a>
                         <ul>
                             @if(auth()->user()->can('edit fournisseur') || auth()->user()->hasRole('gestionnaire'))
@@ -80,12 +82,20 @@
                       <li class="{{ request()->routeIs('test.*') ? 'active' : '' }}"><a  href="{{ route('test.list') }}"><i class="ti-help"></i> Tests </a></li>
                       <li class="{{ request()->routeIs('regle.*') ? 'active' : '' }}"><a  href="{{ route('regle.list') }}"><i class="ti-check-box"></i> Règles qualités</a></li>
                       <li class="{{ request()->routeIs('action.*') ? 'active' : '' }}"><a  href="{{ route('action.list') }}"><i class="ti-bolt"></i> Actions</a></li>
-                      <li class="{{ request()->routeIs('audit.*') ? 'active' : '' }}"><a  href="{{ route('audit.dashbord') }}"><i class="ti-clipboard"></i> Audits </a></li>
                       <li class="{{ request()->routeIs('inspection.*') ? 'active' : '' }}"><a  href="{{ route('inspection.dashbord') }}"><i class="ti-write"></i> Inspections </a></li>
+                      <li class="{{ request()->routeIs('audit.*') ? 'active' : '' }}"><a  href="{{ route('audit.dashbord') }}"><i class="ti-clipboard"></i> Audits </a></li>
                     @endrole
 
                     @role('simple')
-                    <li class="{{ request()->routeIs('produit.*') ? 'active' : '' }}"><a  href="{{ route('produit.list') }}"><i class="ti-package"></i> Articles </a></li>
+                    @if(Auth::user()->hasDirectPermission('edit fournisseur'))
+                        <li class="{{ request()->routeIs('produit.*') ? 'active' : '' }}"><a  href="{{ route('produit.list') }}"><i class="ti-package"></i> Matieres Premieres </a></li>
+                    @else
+                        @if(Auth::user()->hasDirectPermission('edit client'))
+                            <li class="{{ request()->routeIs('produit.*') ? 'active' : '' }}"><a  href="{{ route('produit.list') }}"><i class="ti-package"></i> Produits </a></li>
+                        @else
+                            <li class="{{ request()->routeIs('produit.*') ? 'active' : '' }}"><a  href="{{ route('produit.list') }}"><i class="ti-package"></i> Articles </a></li>
+                        @endif
+                    @endif                    
                       @can('edit client')
                         <li class="{{ request()->routeIs('client.*') ? 'active' : '' }}"><a  href="{{ route('client.list') }}"><i class="ti-shopping-cart"></i> Clients </a></li>
                       @endcan
@@ -97,8 +107,8 @@
                       @endcan
                     @endrole
 
-                    <li class=""><a><i href="" class="ti-id-badge"></i> Profil</a></li>
-                    <li class=""><a><i href="" class="ti-book"></i> Documents </a></li>
+                    
+                    
                     <li><a  href="{{ route('logout')}}"
                                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

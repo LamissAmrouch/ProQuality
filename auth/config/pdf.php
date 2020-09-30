@@ -8,5 +8,6 @@ return [
 	'keywords'              => '',
 	'creator'               => 'Laravel Pdf',
 	'display_mode'          => 'fullpage',
+	'title'                 => 'PDF',
 	'tempDir'               => base_path('../temp/')
 ];

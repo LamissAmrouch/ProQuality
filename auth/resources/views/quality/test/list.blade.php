@@ -48,7 +48,7 @@
                                     <script type="text/javascript">
                                         $(document).ready(function(){
                                             swal({
-                                            title: "Bravo!",
+                                            title: "Réussi",
                                             text: $("#success-msg").text(),
                                             type: "success",
                                             showConfirmButton: true
@@ -63,7 +63,6 @@
                                                 <th>ID</th>
                                                 <th>Nom</th>
                                                 <th>Type</th>
-                                                <th>Description</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -73,13 +72,10 @@
                                                 <th scope="row"> <span class="badge badge-primary">{{ $test->id }} </span> </th>
                                                 <td>{{ $test->nom }}</td>
                                                 <td>{{ $test->type }}</td>
-                                                <td>{{ $test->description }}</td>
+                                                
                                                 <td>
-                                                <a style="text-decoration:none;color:#ffffff" href="{{ route('test.edit',$test )}}"> 
-                                                    <button class="btn btn-info btn-sm"> 
-                                                        <i class="ti-eye" aria-hidden="true"></i> 
-                                                    </button>
-                                                </a>
+                                                
+                                                
                                                 <a style="text-decoration:none;color:#ffffff" href="{{ route('test.edit',$test )}}"> 
                                                     <button class="btn btn-warning btn-sm"> 
                                                         <i class="ti-pencil-alt" aria-hidden="true"></i> 
@@ -122,7 +118,7 @@
 </tbody>
 </table>
 
-
+{{ $tests->links()  }}
 
 </div>
 </div>

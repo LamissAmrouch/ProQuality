@@ -31,7 +31,10 @@
               </div>
               <div class="col-lg-6">
                 <div class="text-right">  
-                    <a href="{{ route('anomalie.createFromScratch')}}">
+                    <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('anomalie.export') }}">
+                        <i class="ti-upload"></i>Exporter journal
+                    </a>
+                    <a  href="{{ route('anomalie.createFromScratch')}}" >
                       <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
                         <i class="ti-plus"></i>Ajouter une anomalie</button>                 
                     </a>
@@ -46,7 +49,7 @@
                     <script type="text/javascript">
                         $(document).ready(function(){
                             swal({
-                              title: "Bravo!",
+                              title: "Réussi",
                               text: $("#success-msg").text(),
                               type: "success",
                               showConfirmButton: true
@@ -88,7 +91,7 @@
                                         {{ $anomalie->etat }}</span>
                                     </td>                                    
                                     <td>
-                                      <a style="text-decoration:none;color:#ffffff;" href="{{ route('anomalie.createFrom', $anomalie->id )}}"> 
+                                      <a style="text-decoration:none;color:#ffffff;" href="{{ route('anomalie.view', $anomalie)}}"> 
                                         <button class="btn btn-info btn-sm"> 
                                               <i class="ti-eye" aria-hidden="true"></i> 
                                         </button>
@@ -98,7 +101,7 @@
                                               <i class="ti-pencil-alt" aria-hidden="true"></i> 
                                         </button>
                                       </a> 
-                                      <form method="POST" id="delete-form-{{$anomalie->id}}" action={{ route('anomalie.delete',$anomalie) }} style="display:none;">
+                                      <form method="POST" id="delete-form-{{$anomalie->id}}" action="{{ route('anomalie.delete',$anomalie) }}" style="display:none;">
                                           {{ csrf_field() }}
                                           {{ method_field('delete')}}
                                       </form>
@@ -133,11 +136,12 @@
                               @endforeach
                         </tbody>
                       </table>
+                      {{ $anomalies->links()  }}
             </div>
 
           </div>
         <!-- main content -->
         </div> 
       <!-- container-fluid -->   
-{{ $anomalies->links()  }}
+
 @endsection

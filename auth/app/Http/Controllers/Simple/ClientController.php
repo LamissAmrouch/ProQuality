@@ -27,7 +27,8 @@ class ClientController extends Controller
     }
 
     public function index(){
-        $clients = client::all();
+       
+        $clients = client::paginate(15);
         return view('simple.client.index',compact('clients'));
     }
 
@@ -40,14 +41,12 @@ class ClientController extends Controller
         $this->validate($request,[
             'nom' => 'required',
             'description' => 'required',
-            'note' => ['required', 'integer'],
             'adresse' => 'required'
         ]);
         $client = new Client;
         $client->nom = $request->nom; 
         $client->description = $request->description; 
         $client->adresse = $request->adresse; 
-        $client->note = $request->note; 
         $client->save();
         return redirect(route('client.list'))->with('successMsg',"Le client est ajouté avec succès");
     }
@@ -61,13 +60,11 @@ class ClientController extends Controller
         $this->validate($request,[
             'nom' => 'required',
             'description' => 'required',
-            'note' => ['required', 'integer'],
             'adresse' => 'required'
         ]);
         $client->nom = $request->nom; 
         $client->description = $request->description; 
         $client->adresse = $request->adresse; 
-        $client->note = $request->note; 
         $client->save();
         return redirect(route('client.list'))->with('successMsg',"Le client est modifié avec succès");
     }

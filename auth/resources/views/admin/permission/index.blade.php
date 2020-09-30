@@ -45,7 +45,7 @@
                 <script type="text/javascript">
                     $(document).ready(function(){
                         swal({
-                          title: "Bravo!",
+                          title: "Réussi !",
                           text: $("#success-msg").text(),
                           type: "success",
                           showConfirmButton: true
@@ -77,12 +77,7 @@
                                   {{ $role->name }} ;
                                   @endforeach
                                   </td>
-                                <td>
-                                  <a style="text-decoration:none;color:#ffffff;" href="{{ route('permission.edit',$permission )}}"> 
-                                    <button class="btn btn-info btn-sm"> 
-                                          <i class="ti-eye" aria-hidden="true"></i> 
-                                    </button>
-                                  </a>                                   
+                                <td>                                  
                                   <a style="text-decoration:none;color:#ffffff;" href="{{ route('permission.edit',$permission )}}"> 
                                     <button class="btn btn-warning btn-sm"> 
                                           <i class="ti-pencil-alt" aria-hidden="true"></i> 

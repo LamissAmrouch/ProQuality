@@ -47,7 +47,7 @@
                                     <script type="text/javascript">
                                         $(document).ready(function(){
                                             swal({
-                                            title: "Bravo!",
+                                            title: "Réussi",
                                             text: $("#success-msg").text(),
                                             type: "success",
                                             showConfirmButton: true
@@ -62,9 +62,7 @@
                                             <th>ID</th>
                                             <th>Designation</th>
                                             <th>Type</th>
-                                            <th>Materiel</th>
                                             <th>Resultat</th>
-                                            <th>Auteur</th>
                                             <th>Action(s)</th>
                                         </tr>
                                     </thead>
@@ -74,15 +72,9 @@
                                             <th scope="row"> <span class="badge badge-primary">{{ $action->id }} </span> </th>
                                             <td>{{ $action->designation }}</td>
                                             <td>{{ $action->type }}</td>
-                                            <td>{{ $action->materiel }}</td>
                                             <td>{{ $action->resultat }}</td>
-                                            <td>{{ $action->user->nom }}</td>
                                             <td>
-                                                <a style="text-decoration:none;color:#ffffff;" href="{{ route('action.edit',$action )}}"> 
-                                                    <button class="btn btn-info btn-sm"> 
-                                                            <i class="ti-eye" aria-hidden="true"></i> 
-                                                    </button>
-                                                </a>  
+                                                
                                                 <a style="text-decoration:none;color:#ffffff;" href="{{ route('action.edit',$action )}}"> 
                                                     <button class="btn btn-warning btn-sm"> 
                                                             <i class="ti-pencil-alt" aria-hidden="true"></i> 

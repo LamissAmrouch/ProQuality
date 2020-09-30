@@ -17,11 +17,18 @@ class DatabaseSeeder extends Seeder
        $this->call(Model_Has_PermissionsTableSeeder::class);  
        $this->call(Role_Has_PermissionsTableSeeder::class);  
        $this->call(Model_Has_RolesTableSeeder::class);  
-       $this->call(AtelierTableSeeder::class);  
        $this->call(ProduitTableSeeder::class);  
        $this->call(CaracteristiqueTableSeeder::class);  
+       $this->call(ActionTableSeeder::class); 
+       $this->call(TestTableSeeder::class); 
+       $this->call(ExamenTableSeeder::class);  
+       $this->call(RegleTableSeeder::class); 
+       $this->call(AtelierTableSeeder::class); 
+       $this->call(AlertsTableSeeder::class); 
+       $this->call(ProcedesTableSeeder::class); 
+       $this->call(LotsTableSeeder::class);   
        $this->call(ClientTableSeeder::class);  
-       $this->call(FournisseurTableSeeder::class);  
-        
+       $this->call(FournisseurTableSeeder::class); 
+
     }
 }

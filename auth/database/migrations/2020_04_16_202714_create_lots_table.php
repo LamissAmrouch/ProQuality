@@ -17,7 +17,7 @@ class CreateLotsTable extends Migration
             $table->bigIncrements('id');
             $table->string('titre')->nullable();
             $table->string('caracteristiquep')->nullable(); /*caracteristique du produit du lot*/
-            $table->unsignedBigInteger('quantite');
+            $table->unsignedBigInteger('quantite')->nullable();
             $table->unsignedBigInteger('produit_id')->nullable();
             $table->timestamps();
         });

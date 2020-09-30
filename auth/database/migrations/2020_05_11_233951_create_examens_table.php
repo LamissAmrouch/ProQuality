@@ -15,14 +15,13 @@ class CreateExamensTable extends Migration
     {
         Schema::create('examens', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('nom')->unique();
+            $table->string('nom');
             $table->string('type');
             $table->BigInteger('min')->nullable(); 
             $table->BigInteger('max')->nullable();  
             $table->string('unite')->nullable();   
-            /*$table->string('reponse1')->nullable(); 
-            $table->string('reponse2')->nullable(); */
-        
+            //$table->text('question')->nullable(); 
+          
             $table->unsignedBigInteger('test_id')->nullable();
             $table->foreign('test_id')
             ->references('id')->on('tests')

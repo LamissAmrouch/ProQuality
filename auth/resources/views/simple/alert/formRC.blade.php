@@ -17,7 +17,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li><a href="{{ route('home')}}">Accueil</a></li>
-                                <li><a href="{{ route('alertRC.list')}}">Alertes retours clients</a></li>
+                                <li><a href="{{ route('alertRC.list')}}">Alertes retour client</a></li>
                                 <li class="active">  
                                   @if(!isset($alert))
                                     {{ __('Créer') }}
@@ -36,9 +36,9 @@
                         <div class="card-header">
                             <h4>
                               @if(!isset($alert))
-                                {{ __('Création Alerte retour clients') }}
+                                {{ __('Création Alerte retour client') }}
                               @else
-                                {{ __('Modification Alerte retour clients') }}
+                                {{ __('Modification Alerte retour client') }}
                               @endif
                             </h4>
                         </div><br><br>
@@ -46,6 +46,23 @@
                             <div class="basic-form">
                                 <form action="{{ $action }}" method="POST"> 
                                     {{ csrf_field()}}
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label class="text-right p-t-10 col-md-4">Client</label>
+                                            <div class="col-md-5">
+                                                <select class="form-control" name="client" required>
+                                                    <option value="" disabled selected>Selectionnez le client</option>
+                                                      @foreach(App\Models\Client::all() as $client)
+                                                      <option value="{{ $client->id }}"
+                                                        @if (isset($alert) && ($alert->client->nom == $client->nom))
+                                                        selected
+                                                        @endif 
+                                                      > {{ $client->nom }} </option>
+                                                      @endforeach
+                                              </select> 
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <label class="text-right p-t-10 col-md-4">Produit Fini</label>
@@ -64,13 +81,20 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <label class="text-right p-t-10 col-md-4">Caractéristiques</label>
+                                            <label class="text-right p-t-10 col-md-4">Caractéristique</label>
                                             <div class="col-md-5">                                           
-                                                <select id="caracteristique" class="form-control" name="caracteristiquep" required>
-                                                  @if (isset($alert))
-                                                    <option value="{{ $alert->lot->caracteristiquep }}" selected> {{ $alert->lot->caracteristiquep }}</option>
-                                                  @endif 
-                                                </select>
+                                                <select id="caracteristique" class="form-control" name="caracteristiquep">
+                                                    @if(isset($alert->lot))
+                                                        @foreach (App\Models\Caracteristique::where('produit_id','=',$alert->lot->produit->id)->get() as $c)
+                                                            <option value="{{ $c->nom }}"
+                                                                @if(isset($alert->lot->caracteristiquep) && $alert->lot->caracteristiquep == $c->nom)
+                                                                    selected
+                                                                @endif>
+                                                                {{ $c->nom }}
+                                                            </option>
+                                                        @endforeach
+                                                    @endif
+                                                </select> 
                                             </div>
                                         </div>
                                     </div>
@@ -85,24 +109,7 @@
                                                 required>
                                             </div>
                                         </div>
-                                    </div>     
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label class="text-right p-t-10 col-md-4">Client</label>
-                                            <div class="col-md-5">
-                                                <select class="form-control" name="client" required>
-                                                    <option value="" disabled selected>Selectionnez le client</option>
-                                                      @foreach(App\Models\Client::all() as $client)
-                                                      <option value="{{ $client->id }}"
-                                                        @if (isset($alert) && ($alert->client->nom == $client->nom))
-                                                        selected
-                                                        @endif 
-                                                      > {{ $client->nom }} </option>
-                                                      @endforeach
-                                              </select> 
-                                            </div>
-                                        </div>
-                                    </div>  
+                                    </div>       
                                     <div class="form-group">
                                         <div class="row">
                                             <label class="text-right p-t-10 col-md-4">Motif de retour</label>
@@ -118,11 +125,7 @@
                                         <div class="row">
                                             <label class="text-right p-t-10 col-md-4">Description</label>
                                             <div class="col-md-5">
-                                                <textarea name="description" class="form-control" rows="3">  
-                                                  @if(isset($alert))
-                                                  {{ $alert->description }}
-                                                  @endif
-                                              </textarea>
+                                                <textarea name="description" class="form-control" rows="3">@if(isset($alert)){{ $alert->description }}@endif</textarea>
                                             </div>
                                         </div>
                                     </div>

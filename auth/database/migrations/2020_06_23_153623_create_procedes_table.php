@@ -16,7 +16,7 @@ class CreateProcedesTable extends Migration
         Schema::create('procedes', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('designation');
-            $table->string('description')->nullable();
+            $table->text('description')->nullable();
             $table->unsignedBigInteger('produit_id')->nullable(); 
             $table->unsignedBigInteger('atelier_id')->nullable(); 
             $table->foreign('produit_id')

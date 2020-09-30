@@ -19,7 +19,6 @@ class CreateActionsTable extends Migration
             $table->text('designation');
             $table->text('description');
             $table->text('resultat')->nullable(); 
-            $table->text('materiel')->nullable(); 
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });

@@ -18,8 +18,6 @@ class CreateClientsTable extends Migration
             $table->string('nom');
             $table->text('description')->nullable();
             $table->text('adresse')->nullable();
-            $table->unsignedBigInteger('note')->nullable();
-            $table->unsignedBigInteger('nb_retour')->nullable();
             $table->timestamps();
         });
     }

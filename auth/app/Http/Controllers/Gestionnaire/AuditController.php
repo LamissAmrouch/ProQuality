@@ -15,11 +15,21 @@ use App\Models\Reponse;
 use App\Models\Questionnaire;
 use Auth;
 use Redirect,Response;
+use PDF;
+use Carbon\Carbon;
+use App\Exports\AuditsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AuditController extends Controller
 {
+
+    public function export(){      
+        $year = Carbon::now()->format('Y');
+        return (new AuditsExport($year))->download('Journal des audits '.$year.'.xlsx');
+    }
+
     public function index(){
-    	$audits = Audit::paginate(5);
+    	$audits = Audit::orderBy('id','desc')->paginate(10);
     	return view('quality.audit.index',compact('audits'));
     }
     
@@ -28,6 +38,7 @@ class AuditController extends Controller
         $event->rappel = "false"; // update rappel variable
         $event->save();
         $audit = Audit::where('id', '=' , $event->audit_id)->first();
+  
         if($event->alert != null){
             $event->alert->etat ="en cours";
             $event->alert->save();
@@ -45,15 +56,14 @@ class AuditController extends Controller
         }
         else{
             $audit = audit::findOrFail($request->id);
-         
-           $update_lot = DB::table('events')
-            ->where('audit_id', $audit->id )
-            ->update(['title' => $audit->titre, 'start' => $request->date , 
-            'end' => $request->date]); 
+            $update_lot = DB::table('events')
+                ->where('audit_id', $audit->id )
+                ->update(['title' => $audit->titre, 'start' => $request->date , 
+                'end' => $request->date]); 
         }
 
         $request->validate([
-            'titre' => ['required','unique:audits'],
+            'titre' => 'required',
             'date' => 'required',
             'description' => 'required',
             'procede' => 'required'
@@ -119,13 +129,15 @@ class AuditController extends Controller
     {
         $audit = audit::findOrFail($request->id);
         $request->validate([
-            'resultats' => 'required',
-            'actions' => 'required'
+            'resultats' => 'required'
         ]);
 
         if(!empty($request->actions)){
             $audit->actions()->attach($request->actions);
         } 
+        if(!empty($request->regles)){
+            $audit->regles()->attach($request->regles);
+        }  
 
         $audit->resultats = $request->resultats; 
 
@@ -163,6 +175,16 @@ class AuditController extends Controller
         $audit->step = 1; 
         $audit->etat = "en cours";  
         return view('quality.audit.create',compact('audit')); 
+    }
+
+    function generate_pdf(Audit $audit) {
+        
+        $pdf = PDF::loadView('pdf.ficheAudit', compact('audit'));
+        return $pdf->stream('Fiche.pdf');
+    }
+
+    public function view(Audit $audit){     
+        return view('quality.audit.view',compact('audit'));
     }
 
 

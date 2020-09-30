@@ -17,6 +17,7 @@ use App\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use PDF;
 
 class AlertController extends Controller
 {
@@ -34,47 +35,65 @@ class AlertController extends Controller
 
     public function storeRF(Request $request){
         $this->validate($request,[
-             'description' => 'required',
-             'fournisseur' => 'required',
-             'produit' => 'required',
-             'quantite' => ['required','integer'],
-             'motif'  => 'required'
-           ]);
+            'fournisseur' => 'required',
+            'produit' => 'required',
+            'caracteristiquep' => 'required',
+            'quantite' => ['required','integer']
+        ]);
            
-           $alert = new Alert;
-           $lot = new Lot;
-           $alert->type = 'Retour fournisseur';
-           $alert->description = $request->description; 
-           $alert->fournisseur_id = $request->fournisseur;
-           $alert->motif = $request->motif;
-           $lot_id = DB::table('lots')->insertGetId(
-            ['quantite' => $request->quantite, 'produit_id' => $request->produit]
-           ); 
-           /* notify the QHSE user */
-           $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
-           $alert->user_id = $users[0]->id;
-           $alert->sent = 0;
-           $alert->etat = "nouveau";
-
-           /* automaticly create an associated anomaly */
-           $anomalie_id = DB::table('anomalies')->insertGetId([   
-                'lot_id' => $lot_id,
-                'fournisseur_id' => $alert->fournisseur_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,         
-                'step' => 1, 
-                'etat' => "nouveau",
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),   
+        $alert = new Alert;
+        $lot = new Lot;
+        $alert->type = 'Retour fournisseur';
+        if(!empty($request->description)) {
+            $alert->description= $request->description; 
+        }
+        if(!empty($request->motif)) {
+            $alert->motif= $request->motif; 
+        }
+        $alert->fournisseur_id = $request->fournisseur;
+        $lot_id = DB::table('lots')->insertGetId([
+            'quantite' => $request->quantite, 
+            'caracteristiquep' => $request->caracteristiquep, 
+            'produit_id' => $request->produit
             ]); 
-           $alert->anomalie_id = $anomalie_id; 
-           $alert->lot_id = $lot_id; 
-           $alert->save();
-           return redirect(route('alertRF.list'))->with('successMsg',"Création d'une nouvelle alerte");
+        /* notify the QHSE user */
+        $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
+        $alert->user_id = $users[0]->id;
+        $alert->sent = 0;
+        $alert->etat = "nouveau";
+
+        /* automaticly create an associated anomaly */
+        $anomalie = new Anomalie;
+        $anomalie->lot_id = $lot_id;
+        $anomalie->fournisseur_id = $request->fournisseur;
+        $anomalie->type = 'Retour fournisseur';
+        $anomalie->step = 1;
+        $anomalie->etat = "nouveau";
+        $anomalie->created_at = Carbon::now();
+        $anomalie->updated_at = Carbon::now();
+        if(!empty($request->description)) {
+            $anomalie->description= $request->description; 
+        }           
+        $anomalie->save();
+
+        $alert->anomalie_id = $anomalie->id; 
+        $alert->lot_id = $lot_id; 
+        $alert->save();
+
+        if(!empty($request->motif)) {
+            $anomalie->titre = $alert->motif. ' N°'.$anomalie->id;
+        }
+        else{
+            $anomalie->titre = '';
+        }    
+        $anomalie->save(); 
+
+        return redirect(route('alertRF.list'))->with('successMsg',"Création d'une nouvelle alerte");
     }
 
     public function showRF(){    
-        $alerts = Alert::where('type', '=' , 'Retour fournisseur' )->get();
+        
+        $alerts = Alert::where('type', '=',  'Retour fournisseur' )->orderBy('id','desc')->paginate(15);
         return view('simple.alert.listRF',compact('alerts'));
     }
 
@@ -85,96 +104,146 @@ class AlertController extends Controller
 
     public function updateRF(Request $request, Alert $alert){
         $this->validate($request,[
-            'description' => 'required',
             'fournisseur' => 'required',
             'produit' => 'required',
+            'caracteristiquep' => 'required',
             'quantite' => ['required','integer'],
-            'motif'  => 'required'
-          ]);
-   
-           $alert->description = $request->description; 
-           $alert->fournisseur_id = $request->fournisseur;
-           $alert->motif = $request->motif;
+        ]);
+        if(!empty($request->description)) {
+            $alert->description= $request->description; 
+        }
+        else{
+            $alert->description= '';
+        }
+
+        if(!empty($request->motif)) {
+            $alert->motif= $request->motif; 
+        }        
+        else{
+            $alert->motif= '';
+        }
+        $alert->fournisseur_id = $request->fournisseur;
            
-           $update_lot = DB::table('lots')
-              ->where('id', $alert->lot_id )
-              ->update(['quantite' => $request->quantite, 'produit_id' => $request->produit]);
-            
-            
-            $anomalie_id = DB::table('anomalies')
-            ->where('id', $alert->anomalie_id )
-            ->update([
-                'lot_id' => $alert->lot_id,
-                'fournisseur_id' => $alert->fournisseur_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,
-                'step' => 1, 
-                'etat' => "nouveau",
+        $update_lot = DB::table('lots')
+        ->where('id', $alert->lot_id )
+        ->update([
+            'quantite' => $request->quantite,             
+            'caracteristiquep' => $request->caracteristiquep, 
+            'produit_id' => $request->produit
             ]);
 
-           $alert->save();
-           return redirect(route('alertRF.list'))->with('successMsg','Modification alerte réussiée');
+        $anomalie = Anomalie::where('id','=',$alert->anomalie_id)->first();
+        $anomalie->lot_id = $alert->lot_id;
+        $anomalie->fournisseur_id = $request->fournisseur_id;
+        $anomalie->type = 'Retour fournisseur';
+        $anomalie->step = 1;
+        $anomalie->etat = "nouveau";
+        $anomalie->created_at = Carbon::now();
+        $anomalie->updated_at = Carbon::now();
+        if(!empty($request->description)) {
+            $anomalie->description= $request->description; 
+        }           
+        else{
+            $anomalie->description = '';
+        }     
+
+        if(!empty($request->motif)) {
+            $anomalie->titre = $request->motif. ' N°'.$anomalie->id;
+        }
+        else{
+            $anomalie->titre = '';
+        }    
+        $anomalie->save();
+
+        $alert->save();
+        return redirect(route('alertRF.list'))->with('successMsg','Modification alerte réussiée');
     }
 
     public function deleteRF(Alert $alert){
+        DB::table('lots')->where('id', $alert->lot_id )->delete();
+        DB::table('anomalies')->where('id', $alert->anomalie_id )->delete();
         $alert->delete();
         return redirect(route('alertRF.list'));
+    }
+    
+    function generate_pdf_RF(Alert $alert) {
+        $pdf = PDF::loadView('pdf.ficheRF', compact('alert'));
+        return $pdf->stream('Fiche.pdf');
+    }
+    
+    public function viewRF(Alert $alert){     
+        return view('simple.alert.viewRF',compact('alert'));
     }
 
     /*----------------- CRUD alertRC --------------------*/
 
     public function createRC(){ 
-      $action = route('alertRC.create');
-      return view('simple.alert.formRC', compact('action'));
+        $action = route('alertRC.create');
+        return view('simple.alert.formRC', compact('action'));
     }
 
     public function storeRC(Request $request){
         $this->validate($request,[
-             'client' => 'required',
-             'description' => 'required',
-             'motif' => 'required',
-             'quantite' => ['required','integer'],
-             'produit' => 'required',
-             'caracteristiquep' => 'required'
-           ]);
-           
-           $alert = new Alert;
-           $lot = new Lot;
-           $alert->type = 'Retour client';
-           $alert->description = $request->description; 
-           $alert->client_id = $request->client;
-           $alert->motif = $request->motif;
-           /* notify the QHSE user */
-           $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
-           $alert->user_id = $users[0]->id;
-           $alert->sent = 0;
-           $alert->etat = "nouveau";
+            'client' => 'required',
+            'caracteristiquep' => 'required',
+            'quantite' => ['required','integer'],
+            'produit' => 'required',
+        ]);
+        $alert = new Alert;
+        $lot = new Lot;
+        $alert->type = 'Retour client';
+        if(!empty($request->description)) {
+            $alert->description= $request->description; 
+        }
+        if(!empty($request->motif)) {
+            $alert->motif= $request->motif; 
+        }
+        $alert->client_id = $request->client;
+        /* notify the QHSE user */
+        $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
+        $alert->user_id = $users[0]->id;
+        $alert->sent = 0;
+        $alert->etat = "nouveau";
 
-           $lot_id = DB::table('lots')->insertGetId(
-            ['quantite' => $request->quantite, 'produit_id' => $request->produit , 
-            'caracteristiquep' => $request->caracteristiquep]
-           ); 
+        $lot_id = DB::table('lots')->insertGetId([
+            'quantite' => $request->quantite, 
+            'produit_id' => $request->produit , 
+            'caracteristiquep' => $request->caracteristiquep
+        ]); 
 
-            /* automaticly create an associated anomaly */
-           $anomalie_id = DB::table('anomalies')->insertGetId([   
-                'lot_id' => $lot_id,
-                'client_id' => $alert->client_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,   
-                'step' => 1,
-                'etat' => "nouveau",
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),           
-            ]); 
-           $alert->anomalie_id = $anomalie_id; 
+        /* automaticly create an associated anomaly */
+        $anomalie = new Anomalie;
+        $anomalie->lot_id = $lot_id;
+        $anomalie->client_id = $request->client;
+        $anomalie->type = 'Retour client';
+        $anomalie->step = 1;
+        $anomalie->etat = "nouveau";
+        $anomalie->created_at = Carbon::now();
+        $anomalie->updated_at = Carbon::now();
+        if(!empty($request->description)) {
+            $anomalie->description= $request->description; 
+        }           
+        $anomalie->save();
 
-           $alert->lot_id = $lot_id; 
-           $alert->save();
-           return redirect(route('alertRC.list'))->with('successMsg',"Création d'une nouvelle alerte");
+        $alert->anomalie_id = $anomalie->id; 
+        $alert->lot_id = $lot_id; 
+        $alert->save();
+
+        if(!empty($request->motif)) {
+            $anomalie->titre = $request->motif. ' N°'.$anomalie->id;
+        }
+        else{
+            $anomalie->titre = '';
+        }    
+        $anomalie->save();
+
+        return redirect(route('alertRC.list'))->with('successMsg',"Création d'une nouvelle alerte");
     }
 
     public function showRC(){    
-        $alerts = Alert::where('type', '=' , 'Retour client' )->get();
+       
+        $alerts = Alert::where('type', '=',  'Retour client' )
+        ->orderBy('id','desc')->paginate(15);
         return view('simple.alert.listRC',compact('alerts'));
     }
 
@@ -186,42 +255,73 @@ class AlertController extends Controller
     public function updateRC(Request $request, Alert $alert){
         $this->validate($request,[
             'client' => 'required',
-            'description' => 'required',
-            'motif' => 'required',
             'quantite' => ['required','integer'],
             'produit' => 'required',
             'caracteristiquep' => 'required'
-          ]);
+        ]);
            
-           $alert->type = 'Retour client';
-           $alert->description = $request->description; 
-           $alert->client_id = $request->client;
-           $alert->motif = $request->motif;
-           $alert->sent = 0;
+            $alert->type = 'Retour client';
+            if(!empty($request->description)) {
+                $alert->description= $request->description; 
+            }
+            else{
+                $alert->description= '';
+            }  
 
-           $update_lot = DB::table('lots')
-              ->where('id', $alert->lot_id )
-              ->update(['quantite' => $request->quantite, 'produit_id' => $request->produit ,
-               'caracteristiquep' => $request->caracteristiquep]);
-        
-            $anomalie_id = DB::table('anomalies')
-            ->where('id', $alert->anomalie_id )
-            ->update([
-                'lot_id' => $alert->lot_id,
-                'client_id' => $alert->client_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,
-                'step' => 1,
-                'etat' => "nouveau",
-            ]);
+            if(!empty($request->motif)) {
+                $alert->motif= $request->motif; 
+            }
+            else{
+                $alert->motif= '';
+            }
+            $alert->client_id = $request->client;
+            $alert->sent = 0;
 
-           $alert->save();
-           return redirect(route('alertRC.list'))->with('successMsg','Modification alerte réussiée');
+            $update_lot = DB::table('lots')
+                ->where('id', $alert->lot_id )
+                ->update(['quantite' => $request->quantite, 'produit_id' => $request->produit ,
+                'caracteristiquep' => $request->caracteristiquep]);
+
+            $anomalie = Anomalie::where('id','=',$alert->anomalie_id)->first();
+            $anomalie->lot_id = $alert->lot_id;
+            $anomalie->client_id = $alert->client_id;
+            $anomalie->type = 'Retour client';
+            $anomalie->step = 1;
+            $anomalie->etat = "nouveau";
+            if(!empty($request->description)) {
+                $anomalie->description= $request->description; 
+            }
+            else{
+                $anomalie->description= '';
+            }    
+
+            if(!empty($request->motif)) {
+                $anomalie->titre = $request->motif. ' N°'.$anomalie->id;
+            }
+            else{
+                $anomalie->titre = '';
+            }    
+
+            $anomalie->save();
+
+            $alert->save();
+            return redirect(route('alertRC.list'))->with('successMsg','Modification alerte réussiée');
     }
 
     public function deleteRC(Alert $alert){
+        DB::table('lots')->where('id', $alert->lot_id )->delete();
+        DB::table('anomalies')->where('id', $alert->anomalie_id )->delete();
         $alert->delete();
         return redirect(route('alertRC.list'));
+    }
+    
+    public function viewRC(Alert $alert){     
+        return view('simple.alert.viewRC',compact('alert'));
+    }
+
+    function generate_pdf_RC(Alert $alert){
+        $pdf = PDF::loadView('pdf.ficheRC', compact('alert'));
+        return $pdf->stream('Fiche.pdf');
     }
 
     /*----------------- CRUD alertRP --------------------*/
@@ -234,50 +334,64 @@ class AlertController extends Controller
     public function storeRP(Request $request){
         $this->validate($request,[
              'atelier' => 'required',
-             'description' => 'required',
-             'motif' => 'required',
              'quantite' => ['required','integer'],
              'produit' => 'required',
              'caracteristiquep' => 'required'
            ]);
            
-           $alert = new Alert;
-           $lot = new Lot;
-           $alert->type = 'Retour production';
-           $alert->description = $request->description; 
-           $alert->atelier_id = $request->atelier;
-           $alert->motif = $request->motif;
-           $lot_id = DB::table('lots')->insertGetId(
-            ['quantite' => $request->quantite, 'produit_id' => $request->produit ,
-             'caracteristiquep' => $request->caracteristiquep]
-           ); 
+            $alert = new Alert;
+            $lot = new Lot;
+            $alert->type = 'Retour production';
+            if(!empty($request->description)) {
+                $alert->description= $request->description; 
+            }
+            if(!empty($request->motif)) {
+                $alert->motif= $request->motif; 
+            }
+            $alert->atelier_id = $request->atelier;
+            $lot_id = DB::table('lots')->insertGetId(
+                ['quantite' => $request->quantite, 'produit_id' => $request->produit ,
+                'caracteristiquep' => $request->caracteristiquep]
+            ); 
 
-           /* notify the QHSE user */
-           $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
-           $alert->user_id = $users[0]->id;
-           $alert->sent = 0;
-           $alert->etat = "nouveau";
+            /* notify the QHSE user */
+            $users = User::whereHas("roles", function($q){ $q->where("name", "gestionnaire"); })->get();
+            $alert->user_id = $users[0]->id;
+            $alert->sent = 0;
+            $alert->etat = "nouveau";
 
-           /* automaticly create an associated anomaly */
-           $anomalie_id = DB::table('anomalies')->insertGetId([   
-                'lot_id' => $lot_id,
-                'atelier_id' => $alert->atelier_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,  
-                'etat' => "nouveau",
-                'step' => 1,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),            
-            ]); 
-           $alert->anomalie_id = $anomalie_id; 
+            /* automaticly create an associated anomaly */
+            $anomalie = new Anomalie;
+            $anomalie->lot_id = $lot_id;
+            $anomalie->atelier_id = $request->atelier;
+            $anomalie->type = 'Retour production';
+            $anomalie->step = 1;
+            $anomalie->etat = "nouveau";
+            $anomalie->created_at = Carbon::now();
+            $anomalie->updated_at = Carbon::now();
+            if(!empty($request->description)) {
+                $anomalie->description= $request->description; 
+            }           
+            $anomalie->save();
+            
+            $alert->anomalie_id = $anomalie->id; 
+            $alert->lot_id = $lot_id; 
+            $alert->save();
 
-           $alert->lot_id = $lot_id; 
-           $alert->save();
-           return redirect(route('alertRP.list'))->with('successMsg',"Création d'une nouvelle alerte");
+            if(!empty($request->motif)) {
+                $anomalie->titre = $request->motif. ' N°'.$anomalie->id;
+            }
+            else{
+                $anomalie->titre = '';
+            }    
+
+            $anomalie->save();
+            return redirect(route('alertRP.list'))->with('successMsg',"Création d'une nouvelle alerte");
     }
 
     public function showRP(){    
-        $alerts = Alert::where('type', '=' , 'Retour production' )->get();
+      
+        $alerts = Alert::where('type', '=',  'Retour production' )->orderBy('id','desc')->paginate(15);
         return view('simple.alert.listRP',compact('alerts'));
     }
 
@@ -289,40 +403,73 @@ class AlertController extends Controller
     public function updateRP(Request $request, Alert $alert){
         $this->validate($request,[
             'atelier' => 'required',
-            'description' => 'required',
-            'motif' => 'required',
             'quantite' => ['required','integer'],
             'produit' => 'required',
             'caracteristiquep' => 'required'
-          ]);
+        ]);
            
-           $alert->type = 'Retour production';
-           $alert->description = $request->description; 
-           $alert->atelier_id = $request->atelier;
-           $alert->motif = $request->motif;
+            $alert->type = 'Retour production';
+            if(!empty($request->description)) {
+                $alert->description= $request->description; 
+            }
+            else{
+                $alert->description= "";
+            }
+            
+            if(!empty($request->motif)) {
+                $alert->motif= $request->motif; 
+            }
+            else{
+                $alert->motif= '';
+            }
+            $alert->atelier_id = $request->atelier;
            
-           $update_lot = DB::table('lots')
+            $update_lot = DB::table('lots')
               ->where('id', $alert->lot_id )
               ->update(['quantite' => $request->quantite, 'produit_id' => $request->produit ,
                'caracteristiquep' => $request->caracteristiquep]);
-        
-            $anomalie_id = DB::table('anomalies')
-            ->where('id', $alert->anomalie_id )
-            ->update([
-                'lot_id' => $alert->lot_id,
-                'atelier_id' => $alert->atelier_id,
-                'type' => $alert->type,         
-                'description' => $alert->description,                
-                'step' => 1,
-                'etat' => "nouveau",
-            ]);
-           
-           $alert->save();
-           return redirect(route('alertRP.list'))->with('successMsg','Modification alerte réussiée');
+            
+            $anomalie = Anomalie::where('id','=',$alert->anomalie_id)->first();
+            $anomalie->lot_id = $alert->lot_id;
+            $anomalie->atelier_id = $request->atelier_id;
+            $anomalie->type = 'Retour production';
+            $anomalie->step = 1;
+            $anomalie->etat = "nouveau";
+            if(!empty($request->description)) {
+                $anomalie->description= $request->description; 
+            }     
+            else{
+                $anomalie->description= '';
+            }             
+            
+            if(!empty($request->motif)) {
+                $anomalie->titre = $request->motif. ' N°'.$anomalie->id;
+            }
+            else{
+                $anomalie->titre = '';
+            }    
+
+            $anomalie->save();
+
+            $alert->save();
+            return redirect(route('alertRP.list'))->with('successMsg','Modification alerte réussiée');
     }
 
     public function deleteRP(Alert $alert){
+        DB::table('lots')->where('id', $alert->lot_id )->delete();
+        DB::table('anomalies')->where('id', $alert->anomalie_id )->delete();
         $alert->delete();
         return redirect(route('alertRP.list'));
     }
+
+    function generate_pdf_RP(Alert $alert) {
+        
+        $pdf = PDF::loadView('pdf.ficheRP', compact('alert'));
+        return $pdf->stream('Fiche.pdf');
+    }
+
+    public function viewRP(Alert $alert){     
+        return view('simple.alert.viewRP',compact('alert'));
+    }
+
 }

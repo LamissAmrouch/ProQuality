@@ -39,10 +39,10 @@
                                         <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('atelier.export') }}">
                                                 <i class="ti-upload"></i>Exporter
                                         </a>
-                                          <a href="{{ route('atelier.create')}}">
+                                        <a href="{{ route('atelier.create')}}">
                                             <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
-                                                <i class="ti-plus"></i>Ajouter un atelier</button>                 
-                                          </a>
+                                            <i class="ti-plus"></i>Ajouter un atelier</button>                 
+                                        </a>
                                       </div>        
                                     </div>
                                 <br><br>
@@ -53,7 +53,7 @@
                                     <script type="text/javascript">
                                         $(document).ready(function(){
                                             swal({
-                                            title: "Bravo!",
+                                            title: "Réussi",
                                             text: $("#success-msg").text(),
                                             type: "success",
                                             showConfirmButton: true
@@ -69,7 +69,7 @@
                                             <th>ID</th>
                                             <th>Nom</th>
                                             <th>Metier</th>
-                                            <th>Description</th>
+                                           
                                             <th>Action(s)</th>
                                         </tr>
                                     </thead>
@@ -79,13 +79,9 @@
                                             <th scope="row"> <span class="badge badge-primary">{{ $atelier->id }} </span> </th>
                                             <td>{{ $atelier->nom }}</td>
                                             <td>{{ $atelier->metier }}</td>
-                                            <td>{{ $atelier->description }}</td>
+                                           
                                             <td>
-                                                <a style="text-decoration:none;color:#ffffff;" href="{{ route('atelier.edit',$atelier )}}"> 
-                                                    <button class="btn btn-info btn-sm"> 
-                                                            <i class="ti-eye" aria-hidden="true"></i> 
-                                                    </button>
-                                                </a>  
+                                                 
                                                 <a style="text-decoration:none;color:#ffffff;" href="{{ route('atelier.edit',$atelier )}}"> 
                                                     <button class="btn btn-warning btn-sm"> 
                                                             <i class="ti-pencil-alt" aria-hidden="true"></i> 

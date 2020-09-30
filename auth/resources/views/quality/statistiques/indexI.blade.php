@@ -8,7 +8,7 @@
             <div class="row main-header">
                 <div class="col-lg-8 p-0">
                     <div class="page-header">
-                        <div class="page-title"><h1>Statistiques inspections des articles</h1></div>
+                        <div class="page-title"><h1>Statistiques inspections des articles ( année : {{ $yearDisplayed }})</h1></div>
                     </div>
                 </div>
                 <div class="col-lg-4">
@@ -28,7 +28,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="menu1" role="menu" style="height:500%; overflow:hidden; overflow-y:scroll;">
-                                @for($year = Carbon\Carbon::now('y')->subYears(10)->year; $year < Carbon\Carbon::now('y')->addYears(20)->year; $year++)
+                                @for($year = Carbon\Carbon::now('y')->subYears(5)->year; $year < Carbon\Carbon::now('y')->addYears(1)->year; $year++)
                                 <li role="presentation"><a role="menuitem" href="{{ route('statistiques.inspection',$year)}}">
                                     {{ $year }}
                                 </a></li>
@@ -43,7 +43,7 @@
                     <div class="col-lg-8">
                         <div class="card alert">
                             <div class="card-header m-b-10">
-                                <h4>Histogramme des inspections par type ( année : {{ $yearDisplayed }})</h4>
+                                <h4>Distribution des inspections</h4>
                                 <div class="card-header pull-right">
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                     <div class="col-lg-4">
                         <div class="card alert">
                             <div class="card-header">
-                                <h4>Répartition par type d'inspection</h4>
+                                <h4>Répartition des inspections</h4>
                             </div>
                             <div class="camembert card-content">
                                 {!! $pieChart->container() !!}
@@ -70,7 +70,7 @@
                     <div class="col-lg-12">
                         <div class="card alert">
                             <div class="card-header m-b-10">
-                                <h4>Récapitulatif des inspection ( année : {{ $yearDisplayed }})</h4>
+                                <h4>Tableau récapitulatif des inspections</h4>
                             </div>
                             <div class="card-body card-content stats">
                                 <table class="table table-responsive table-hover table-bordered">

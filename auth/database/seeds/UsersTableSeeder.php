@@ -14,16 +14,18 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         DB::table('users')->insert([
-            'nom' => 'Ouaret',
+            'id' => '1',
+            'nom' => 'Ouared',
             'prenom' => 'Nabil',
-            'numero_tel' => '+213558',
+            'numero_tel' => '+213550902696',
             'service' => 'SI',
-            'email' => 'admin@gmail.com',
+            'email' => 'admin@digiuslinkalgeria.com',
             'password' => bcrypt('12345678'),
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         DB::table('users')->insert([
+            'id' => '2',
             'nom' => 'Nacer',
             'prenom' => 'Thinhinane',
             'numero_tel' => '+213560208116',
@@ -34,6 +36,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         DB::table('users')->insert([
+            'id' => '3',
             'nom' => 'Bendjebbar',
             'prenom' => 'Loubna',
             'numero_tel' => '+213550902702',
@@ -44,6 +47,7 @@ class UsersTableSeeder extends Seeder
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         DB::table('users')->insert([
+            'id' => '4',
             'nom' => 'Mimoune',
             'prenom' => 'Fahima',
             'numero_tel' => '+213550902702',
@@ -54,24 +58,49 @@ class UsersTableSeeder extends Seeder
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         DB::table('users')->insert([
-            'nom' => 'Amrouch',
-            'prenom' => 'Lamiss',
-            'numero_tel' => '+213558757779',
+            'id' => '5',
+            'nom' => 'Mohamed',
+            'prenom' => 'Dzanouni',
+            'numero_tel' => '',
             'service' => 'QHSE',
-            'email' => 'fl_amrouch@esi.dz',
+            'email' => 'dzanouni.mohamed@digiuslinkalgeria.net',
+            'password' => bcrypt('12345678'),
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);
+       
+        DB::table('users')->insert([
+            'id' => '6',
+            'nom' => 'Riche',
+            'prenom' => 'Mohamed Walid',
+            'numero_tel' => '',
+            'service' => 'Réparation',
+            'email' => 'riche.mohamed@digiuslinkalgeria.net',
             'password' => bcrypt('12345678'),
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
         DB::table('users')->insert([
-            'nom' => 'Reparateur',
-            'prenom' => 'Widad',
-            'numero_tel' => '+213558878809',
-            'service' => 'QHSE',
-            'email' => 'fw_dekkiche@esi.dz',
+            'id' => '7',
+            'nom' => 'Hamraoui',
+            'prenom' => 'Yasmine',
+            'numero_tel' => '',
+            'service' => 'Réparation',
+            'email' => 'hamraoui.yasmine@digiuslinkalgeria.net',
             'password' => bcrypt('12345678'),
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
+        DB::table('users')->insert([
+            'id' => '8',
+            'nom' => 'Slimani',
+            'prenom' => 'Nadia',
+            'numero_tel' => '',
+            'service' => 'Réparation',
+            'email' => 'slimani.nadia@digiuslinkalgeria.net',
+            'password' => bcrypt('12345678'),
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
+        ]);   
     }
 }

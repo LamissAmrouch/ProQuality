@@ -9,16 +9,22 @@
 
     <title>ProQuality</title>
     <!-- ================= Favicon ================== -->
-    <!-- Standard -->
-    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff">
-    <!-- Retina iPad Touch Icon-->
-    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff">
-    <!-- Retina iPhone Touch Icon-->
-    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff">
-    <!-- Standard iPad Touch Icon-->
-    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff">
-    <!-- Standard iPhone Touch Icon-->
-    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff">
+    <!-- Standard 
+    <link rel="shortcut icon" href="http://placehold.it/64.png/000/fff"> -->
+    <link rel="shortcut icon" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <!-- Retina iPad Touch Icon
+    <link rel="apple-touch-icon" sizes="144x144" href="http://placehold.it/144.png/000/fff"> -->
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <!-- Retina iPhone Touch Icon
+    <link rel="apple-touch-icon" sizes="114x114" href="http://placehold.it/114.png/000/fff"> -->
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ asset('public/logo/ProQuality_small.png') }}">
+    <!-- Standard iPad Touch Icon
+    <link rel="apple-touch-icon" sizes="72x72" href="http://placehold.it/72.png/000/fff"> -->
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ asset('public/logo/ProQuality_small.png') }}"> 
+    <!-- Standard iPhone Touch Icon
+    <link rel="apple-touch-icon" sizes="57x57" href="http://placehold.it/57.png/000/fff"> -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ asset('public/logo/ProQuality_small.png') }}">
+
     <!-- Styles -->
     <link href="{{ asset('public/assets/fontAwesome/css/fontawesome-all.min.css') }}" rel="stylesheet">
     <link href="{{ asset('public/assets/css/lib/themify-icons.css') }}" rel="stylesheet">
@@ -97,30 +103,6 @@
     <script src="{{ asset('public/assets/js/lib/chart-js/Chart.bundle.js') }}"></script>
     <script src="{{ asset('public/assets/js/lib/chart-js/chartjs-init.js') }}"></script>
 
-
-    @if(isset($anomalie->criticite))
-    <script> 
-        var criticite = @json($anomalie).criticite;
-        $("#criticite").ionRangeSlider({
-            grid: true,
-            min: 0,
-            max: 100,
-            from: criticite,
-            prefix: "%"
-        });
-    </script>
-    @else
-        <script> 
-            $("#criticite").ionRangeSlider({
-                grid: true,
-                min: 0,
-                max: 100,
-                from: 10,
-                prefix: "%"
-            });
-        </script>
-    @endif
-
     @if(session('toasts') !== null))
     <script type="text/javascript">
         /* display Toasters as the page is loaded */
@@ -128,7 +110,6 @@
         if(array[0]>0) fournisseur(array[0]);
         if(array[1]>0) atelier(array[1]);
         if(array[2]>0) client(array[2]);
-
         /* to display toastr by the type of alert  */
         function fournisseur(cpt) {
             toastr.success(cpt + "  nouveaux retours" ,"Retour fournisseur",{
@@ -138,7 +119,7 @@
                 "newestOnTop": true,
                 "progressBar": true,
                 "positionClass": "toast-bottom-right",
-                "preventDuplicates": true,
+                "preventDuplicates": false,
                 "onclick": null,
                 "showDuration": "300",
                 "hideDuration": "1000",
@@ -158,7 +139,7 @@
                 "newestOnTop": true,
                 "progressBar": true,
                 "positionClass": "toast-bottom-right",
-                "preventDuplicates": true,
+                "preventDuplicates": false,
                 "onclick": null,
                 "showDuration": "300",
                 "hideDuration": "1000",
@@ -172,13 +153,13 @@
         }
         function client(cpt) {
             toastr.info(cpt + "  nouveaux retours" ,"Retour client",{
-                    timeOut: 25000,
+                    timeOut: 50000,
                     "closeButton": true,
                     "debug": false,
                     "newestOnTop": true,
                     "progressBar": true,
                     "positionClass": "toast-bottom-right",
-                    "preventDuplicates": true,
+                    "preventDuplicates": false,
                     "onclick": null,
                     "showDuration": "300",
                     "hideDuration": "1000",
@@ -192,140 +173,82 @@
         }
     </script> 
     @endif 
+
+    @php($caracts = App\Models\Caracteristique::all())
+    @php($prods = App\Models\Produit::all())
     <script>
-        (function ($) {
-            "use strict";
-            var retours = {
-                type: 'line',
-                data: {
-                    labels: ["", "Jan", "Fev", "Mar", "Avr", "Mai", "Jui", "Jul","Aou","Sep", "Oct", "Nov", "Dec"],
-                    type: 'line',
-                    defaultFontFamily: 'Montserrat',
-                    datasets: [{
-                        label: "Fournisseur",
-                        data: [0, 42, 23, 14, 25, 15, 100, 105, 55, 75, 12, 80, 78],
-                        backgroundColor: 'transparent',
-                        borderColor: '#00ED96',
-                        borderWidth: 3,
-                        pointStyle: 'circle',
-                        pointRadius: 5,
-                        pointBorderColor: 'transparent',
-                        pointBackgroundColor: '#00ED96',
-
-                            }, {
-                        label: "Production",
-                        data: [0, 30, 10, 60, 80, 63, 10, 42, 23, 14, 25, 15, 55],
-                        backgroundColor: 'transparent',
-                        borderColor: '#F1BE25',
-                        borderWidth: 3,
-                        pointStyle: 'circle',
-                        pointRadius: 5,
-                        pointBorderColor: 'transparent',
-                        pointBackgroundColor: '#F1BE25',
-                            },
-                        {
-                        label: "Client",
-                        data: [0, 5, 67, 30, 20, 77, 67 , 30, 10, 60, 80, 63, 5],
-                        backgroundColor: 'transparent',
-                        borderColor: '#444BF8',
-                        borderWidth: 3,
-                        pointStyle: 'circle',
-                        pointRadius: 5,
-                        pointBorderColor: 'transparent',
-                        pointBackgroundColor: '#444BF8',
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    tooltips: {
-                        mode: 'index',
-                        titleFontSize: 12,
-                        titleFontColor: '#000',
-                        bodyFontColor: '#000',
-                        backgroundColor: '#fff',
-                        titleFontFamily: 'Montserrat',
-                        bodyFontFamily: 'Montserrat',
-                        cornerRadius: 3,
-                        intersect: false,
-                    },
-                    legend: {
-                        labels: {
-                            usePointStyle: true,
-                            fontFamily: 'Montserrat',
-                        },
-                    },
-                    scales: {
-                        xAxes: [{
-                            display: true,
-                            gridLines: {
-                                display: false,
-                                drawBorder: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Mois'
-                            }
-                                }],
-                        yAxes: [{
-                            display: true,
-                            gridLines: {
-                                display: false,
-                                drawBorder: true
-                            },
-                            scaleLabel: {
-                                display: true,
-                                labelString: 'Nombre'
-                            }
-                                }]
-                    },
-                    title: {
-                        display: false,
-                        text: 'Normal Legend'
-                    }
+        function showCaractersticProduit() {
+            var caracts = @json($caracts);            
+            var produit_id = document.getElementById("produit").value;
+            $('#caracteristique').empty();
+            $('#caracteristique').append('<option value="" disabled> Selectionnez la caractéristique </option>');
+            for (let i = 0; i < caracts.length; i++) {
+                if(caracts[i].produit_id == produit_id){
+                    console.log(produit_id);
+                    var option = '<option value="'+ caracts[i].nom + '">'+ caracts[i].nom + '</option>';
+                    $('#caracteristique').append(option);
                 }
-            };
-            var camembert = {
-                type: 'pie',
-                data: {
-                    datasets: [{
-                        data: [10, 35, 55],
-                        backgroundColor: [
-                            "#00ED96", 
-                            "#F1BE25",
-                            "#444BF8",
-                        ],
-                        hoverBackgroundColor: [
-                            "rgba(0, 237, 150,0.7)",
-                            "rgb(241, 190, 37,0.8)",
-                            "rgba(68, 75, 248,0.8)",
-                        ]
-                    }],
-                    labels: [
-                        "Fournisseur",
-                        "Production",
-                        "Client"
-                    ]
-                },
-                options: {
-                    responsive: true
+            }
+        }
+        function showTypeProduit(){
+            var prods = @json($prods);            
+            var type = document.getElementById("typeProduit").value;
+            switch (type) {
+                case "Retour fournisseur":
+                    var typeP = "Matiere premiere";
+                    break;
+                case "Retour client":
+                    var typeP = "Fini";
+                    break;
+            }
+            $('#produit').empty();
+            $('#produit').append("<option value='' disabled> Selectionnez l'article </option>");
+            for (let i = 0; i < prods.length; i++) {
+                if(typeP == null || prods[i].type == typeP){
+                    var option = '<option value="'+ prods[i].id + '">'+ prods[i].nom + '</option>';
+                    $('#produit').append(option);
                 }
-            };
-            window.onload = function () {
-                var ctx = document.getElementById("retours-chart").getContext("2d");
-                window.myLine = new Chart(ctx, retours);
-
-                var ctx = document.getElementById("camembert").getContext("2d");
-                window.myLine = new Chart(ctx, camembert);
-            }; 
-        })(jQuery);
+            }
+        }
     </script>
+
+    @if(isset($anomalie->criticite))
+        <script> 
+        var criticite = @json($anomalie).criticite;
+        $("#criticite").ionRangeSlider({
+            grid: true,
+            min: 0,
+            max: 100,
+            from: criticite,
+            prefix: "%"
+        });
+        </script>
+    @else
+        <script> 
+            $("#criticite").ionRangeSlider({
+                grid: true,
+                min: 0,
+                max: 100,
+                from: 10,
+                prefix: "%"
+            });
+        </script>
+    @endif
+
+    @if(isset($anomalie->reparateur_id))
+    <script>
+        $('#reparer').children().attr('checked', true);
+        $('.reparateur-row').show();
+        console.log("update"); 
+    </script>
+    @endif
+
     <script>
         /* reparateur optionnelle */
         $('#reparer').change(function() {
             if($(this).children().is(':checked')) {
                 console.log("checked");
-                $('.reparateur-row').show();
+                $('.reparateur-row').show(); 
             } 
             else {
                 console.log("Unchecked");
@@ -333,6 +256,7 @@
             }
         });
     </script>
+
 
     <script>  
         /* to init stepper of anomaly */
@@ -359,66 +283,8 @@
     </script>
 
     <script>
-        /* display the product's caracteristics */
-        function showCaractersticProduit(){
-            getSelectValue = document.getElementById("produit").value;
-            $('#caracteristique').empty();
-            if (getSelectValue == 1){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="2 GB"> 2 GB </option>
-                <option value="4 GB"> 4 GB </option>
-                <option value="8 GB"> 8 GB </option>
-                <option value="16 GB">16 GB </option>
-                <option value="32 GB">32 GB </option>`); 
-            }
-            if (getSelectValue == 2){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="16 GB"> 16 GB </option>
-                <option value="32 GB"> 32 GB </option>
-                <option value="64 GB"> 64 GB </option>
-                <option value="128 GB"> 128 GB </option>
-                <option value="256 GB"> 256 GB </option>`); 
-            }
-            if (getSelectValue == 3){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="Sans fils"> Sans fils </option>
-                <option value="Filaire"> Filaire </option>`); 
-            }
-            if (getSelectValue == 4){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="Rapide adaptative"> Rapide adaptative </option>`); 
-            }
-            if (getSelectValue == 5){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="Type C"> Type C </option>
-                <option value="Luna"> Luna </option>
-                <option value="Iphone"> Iphone </option>`); 
-            }
-            if (getSelectValue == 6){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="PC"> PC </option>
-                <option value="LAPTOP"> LAPTOP </option>
-                <option value="Onduleur"> Onduleur </option>`); 
-            }
-            if (getSelectValue == 7){ 
-                $('#caracteristique').append(`
-                <option value="" disabled> Selectionnez la caractéristique </option>
-                <option value="2 GB"> 2 GB </option>
-                <option value="4 GB"> 4 GB </option>
-                <option value="8 GB"> 8 GB </option>`); 
-            }
-        }  
-    </script>
-
-    <script>
         /* display anomalie's inputs according to selected type */
-            $("#type").change(function(){
+            $("#typeProduit").change(function(){
                 var getSelectedType = $(this).children("option:selected").val();
                 switch (getSelectedType) {
                     case 'Retour fournisseur':
@@ -529,16 +395,18 @@
             /* check this condition to avoid adding empty table rows */
             if(document.getElementById('nomE').value != '')  {
                 var tr = '<tr>'+
-                    '<td> <input type="hidden" name="nomE[]" value="'+ document.getElementById('nomE').value + '" nomE>'
-                        + document.getElementById('nomE').value + '</td>'+
+                    
                     '<td> <input type="hidden" name="typeE[]" value="'+ document.getElementById('typeE').value + '" typeE>'
                         + document.getElementById('typeE').value + '</td>'+ 
+                    '<td> <input type="hidden" name="nomE[]" value="'+ document.getElementById('nomE').value + '" nomE>'
+                        + document.getElementById('nomE').value + '</td>'+
                     '<td> <input type="hidden" name="min[]" value="'+ document.getElementById('min').value + '" min>'
                         + document.getElementById('min').value  + '</td>'+ 
                     '<td> <input type="hidden" name="max[]" value="'+ document.getElementById('max').value + '" max>'
                         + document.getElementById('max').value   + '</td>'+ 
                     '<td> <input type="hidden" name="unite[]" value="'+ document.getElementById('unite').value + '" unite>'
                         + document.getElementById('unite').value   + '</td>'+ 
+                  
                     '<td><button type="button" id="delete-exam" class="btn btn-danger btn-sm">'
                     + '<i class="ti-close" aria-hidden="true"></i></button></td>'
                 '</tr>';        
@@ -551,10 +419,9 @@
                 document.getElementById('min').value= '';
                 document.getElementById('max').value= '';
                 document.getElementById('unite').value= '';
-                /*document.getElementById('reponse').value= '';
-                document.getElementById('reponseTwo').value= '';*/
+                document.getElementById('question').value= '';
                 document.getElementById("row1").style.display = "none";
-               // document.getElementById("row2").style.display = "none";
+                //document.getElementById("row2").style.display = "none";
             }
         }
         /* delete exam from table exams (in creation of test) */
@@ -572,12 +439,32 @@
                 document.getElementById("row1").style.display = "block";
             } 
     
-            /*if(getSelectValue == "Qualitatif"){
+           /* if(getSelectValue == "Qualitatif"){
                 document.getElementById("row2").style.display = "block";  
-            } */    
+            }     */
         } 
     </script>
     <script>
+        /* Add row caracteristic in product creation */
+        function addRowCaracteristic() {
+            if(document.getElementById('nomCaracteristic').value != '')  {
+                var tr = '<tr>'+
+                    '<td> <input type="hidden" name="nomc[]" value="'+ document.getElementById('nomCaracteristic').value + '" nomc>'
+                        + document.getElementById('nomCaracteristic').value + '</td>'+
+                        '<td><button type="button" id="delete-procede" class="btn btn-danger btn-sm">'
+                        + '<i class="ti-close" aria-hidden="true"></i></button></td>'
+                    '</tr>';
+                /* Add the row in table */
+                $('#tbody-caracteristic').append(tr);
+                /* empty the modal's field */
+                document.getElementById('nomCaracteristic').value= '';
+            }
+        }
+
+        $(document).on('click', '#delete-caracteristic', function(){
+            $(this).parents('tr').remove();
+        }); 
+
         /* Add row procede in product creation */
         function addRowProcede() {
             if(document.getElementById('designationProc').value != '')  {
@@ -660,7 +547,7 @@
                                 success: function (data) {
                                     $('#modalAddEvent').modal('hide');
                                     swal({
-                                    title: "Bravo!",
+                                    title: "Réussi",
                                     text: "Planification d'un évenement",
                                     type: "success",
                                     showConfirmButton: true
@@ -774,7 +661,7 @@
                 }); 
                 
                 if (verify == 0){
-                sweetAlert("Oops...", "Veuillez répondre à tous les examens", "error");
+                sweetAlert("Échec...", "Veuillez répondre à tous les examens", "error");
                 }
                 else{
                 $('#form2').submit();
@@ -785,26 +672,24 @@
             if(document.getElementById('reponseV').value != '')  {
                         var examId = document.getElementById('ExamenId1').value;
                         var reponse = document.getElementById('reponseV').value;
-            
-                        $("table#tableID > tbody > tr").each(function() {
                         
+                        $("table#tableID > tbody > tr").each(function() {
+                                      
+                                        $('td:eq(8) #correct2',this).remove();
+                                        $('td:eq(8) #incorrect2',this).remove();
                                         var v = $('td:eq(0)',this).text();
                                         var iNum1 = parseInt(v);
                                         var iNum = parseInt(examId);
-                                        if (iNum1 == iNum)
-                                        { 
+                                        if (iNum1 == iNum){ 
                                             $('td:eq(7)',this).find('input').val(reponse);
-                                    
-                                            if (reponse == "Fonctionnel" || reponse == "Présent")
-                                            {   
-                                            $('td:eq(8) #correct2',this).remove();
-                                            $('td:eq(8) #incorrect2',this).remove();
-                                            $('td:eq(8)',this).find('input').val("Correct");
-                                            $('td:eq(8) #incorrect',this).css("display","none");
-                                            $('td:eq(8) #correct',this).css("display","inline-block");
+                                            if (reponse == "Fonctionnel" || reponse == "Présent"){   
+                                                $('td:eq(8) #correct2',this).remove();
+                                                $('td:eq(8) #incorrect2',this).remove();
+                                                $('td:eq(8)',this).find('input').val("Correct");
+                                                $('td:eq(8) #incorrect',this).css("display","none");
+                                                $('td:eq(8) #correct',this).css("display","inline-block");
                                             }
                                             else{
-
                                                 $('td:eq(8) #correct2',this).remove();
                                                 $('td:eq(8) #incorrect2',this).remove();
                                                 $('td:eq(8)',this).find('input').val("Incorrect");
@@ -813,7 +698,6 @@
                                             }
                                         }                               
                         });
-                                
                         document.getElementById('ExamenId1').value= '';         
             }
         }
@@ -822,7 +706,6 @@
             var examId = document.getElementById('ExamenId2').value;
             var val = document.getElementById('val').value;
             $("table#tableID > tbody > tr").each(function() {
-                    
                     var v = $('td:eq(0)',this).text();
                     var iNum1 = parseInt(v);
                     var iNum = parseInt(examId);
@@ -835,7 +718,7 @@
                         var minI = parseInt(min);
                         var maxI = parseInt(max);
 
-                        if ( (valI > minI) && (valI < maxI) )
+                        if ( (valI >= minI) && (valI <= maxI) )
                         {   
                             $('td:eq(8) #correct2',this).remove();
                             $('td:eq(8) #incorrect2',this).remove();

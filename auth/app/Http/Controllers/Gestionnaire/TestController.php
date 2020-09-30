@@ -56,7 +56,8 @@ class TestController extends Controller
     }
 
     public function show(){    
-        $tests = Test::all();
+      
+        $tests = Test::paginate(10);
         return view('quality.test.list',compact('tests'));
     }
 
@@ -91,9 +92,9 @@ class TestController extends Controller
                    $examen->unite = $request->unite[$i]; 
               }
              /* if ($examen->type == "Qualitatif"){
-                   $examen->reponse1 = $request->reponse[$i];
-                   $examen->reponse2 = $request->reponseTwo[$i];
-              }*/
+                   $examen->question = $request->question[$i];
+                   //$examen->reponse2 = $request->reponseTwo[$i];
+              } */
               $examen->save();
             }
         }

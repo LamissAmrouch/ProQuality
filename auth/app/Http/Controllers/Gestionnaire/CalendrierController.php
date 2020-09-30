@@ -8,10 +8,10 @@ use App\Models\Event;
 use App\Models\Inspection;
 use App\Models\Alert;
 use App\Models\Audit;
+use Carbon\Carbon;
 use Redirect,Response;
 use DB;
 use Auth;
-use Carbon\Carbon;
 
 class CalendrierController extends Controller
 {
@@ -48,7 +48,8 @@ class CalendrierController extends Controller
                 'etat' => "nouveau",
                 'step' => 1,
                 'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),  ]
+                'updated_at' => Carbon::now(),  
+                ]
             );
             $event->inspection_id = $inspection_id;
         }
@@ -59,7 +60,7 @@ class CalendrierController extends Controller
                  'step' => 1,
                  'created_at' => Carbon::now(),
                  'updated_at' => Carbon::now(), ]
-            );
+            ); 
             $event->audit_id = $audit_id;
         }
 
@@ -78,10 +79,8 @@ class CalendrierController extends Controller
     } 
  
  
-    public function destroy(Request $request)
-    {
-        $event = Event::where('id',$request->id)->delete();
-   
+    public function destroy(Request $request){    
+        $event = Event::where("id","=",$request->id)->delete();
         return Response::json($event);
     }    
  

@@ -31,6 +31,9 @@
               </div>
               <div class="col-lg-6">
                 <div class="text-right">  
+                    <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('inspection.export') }}">
+                        <i class="ti-upload"></i>Exporter journal
+                    </a>
                     <a href="{{ route('inspection.create')}}">
                       <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
                         <i class="ti-plus"></i>Ajouter une inspection</button>                 
@@ -38,31 +41,16 @@
                   </div>        
                 </div>
               </div>
-                      <br>
-                      <!-- to Show success message -->
-                      @if(session('successMsg'))
-                          <div id="success-msg" style="display: none;"> {{ session('successMsg') }}
-                          </div>
-                          <script type="text/javascript">
-                              $(document).ready(function(){
-                                  swal({
-                                    title: "Bravo!",
-                                    text: $("#success-msg").text(),
-                                    type: "success",
-                                    showConfirmButton: true
-                                  });                  
-                            });
-                          </script>
-                      @endif   
-            <br>
-            <br>
-            <div class="card-body">
+                    <br>
+                    <br>
+                    <br>
+                    <div class="card-body">
                       <table class="table table-responsive">
                         <thead>
                                 <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Titre</th>
-                                    <th scope="col">Description</th>
+                                    <th scope="col">Produit</th>
                                     <th scope="col">Etat</th>
                                     <th scope="col">Action </th>
                                 </tr>
@@ -72,7 +60,11 @@
                                   <tr>
                                     <th scope="row"> <span class="badge badge-primary">{{ $inspection->id }} </span></th>
                                     <td>{{ $inspection->titre }}</td>
-                                    <td>{{ $inspection->description }}</td>
+                                    @if(isset($inspection->lot->produit))
+                                      <td>{{ $inspection->lot->produit->nom }}</td>
+                                    @else
+                                      <td>-</td>
+                                    @endif
                                     <td>
                                         @if ($inspection->etat == "nouveau")
                                             <span class="badge badge-info">
@@ -84,7 +76,7 @@
                                         {{ $inspection->etat }}</span>
                                     </td>  
                                     <td>
-                                      <a style="text-decoration:none;color:#ffffff;" href=""> 
+                                      <a style="text-decoration:none;color:#ffffff;" href="{{ route('inspection.view',$inspection) }}"> 
                                         <button class="btn btn-info btn-sm"> 
                                             <i class="ti-eye" aria-hidden="true"></i> 
                                         </button>

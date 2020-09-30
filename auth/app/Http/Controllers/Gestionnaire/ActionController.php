@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class ActionController extends Controller
 {
     public function index(){
-        $actions = Action::paginate(5);
+        $actions = Action::paginate(10);
         return view('quality.action.index',compact('actions'));
     }
 
@@ -34,7 +34,6 @@ class ActionController extends Controller
         $action->designation = $request->designation; 
         $action->description = $request->description; 
         $action->resultat = $request->resultat; 
-        $action->materiel = $request->materiel; 
         $action->user_id = Auth::user()->id; 
         $action->save();
         if(!empty($request->id)){
@@ -68,7 +67,6 @@ class ActionController extends Controller
           $action->designation = $request->designation; 
           $action->description = $request->description; 
           $action->resultat = $request->resultat; 
-          $action->materiel = $request->materiel; 
           $action->user_id = Auth::user()->id; 
           $action->save();
           return redirect(route('action.list'))->with('successMsg',"Modification de l'action avec succès");

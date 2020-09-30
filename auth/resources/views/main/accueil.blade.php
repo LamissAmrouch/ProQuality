@@ -25,45 +25,45 @@
                 </div>
                 <div class="main-content">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <div class="card">
                                 <div class="stat-widget-one">
 									<div class="stat-icon dib"><i class="ti-bell color-secondary"></i></div>
 									<div class="stat-content dib">
-										<div class="stat-text">Alertes non traités</div>
+										<div class="stat-text">Alertes</div>
                                         <div class="stat-digit">{{ sprintf("%02s",App\Models\Statistique::alerteNonTraite())}}</div>
 									</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <div class="card">
                                 <div class="stat-widget-one">
 									<div class="stat-icon dib"><i class="ti-alert color-danger"></i></div>
 									<div class="stat-content dib">
-										<div class="stat-text">Anomalies en cours</div>
+										<div class="stat-text">Anomalies</div>
 										<div class="stat-digit">{{ sprintf("%02s",App\Models\Statistique::anomalieEnCours())}}</div>
 									</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <div class="card">
                                 <div class="stat-widget-one">
 									<div class="stat-icon dib"><i class="ti-write color-info"></i></div>
 									<div class="stat-content dib">
-										<div class="stat-text">Inspections en attente</div>
+										<div class="stat-text">Inspections</div>
 										<div class="stat-digit">{{ sprintf("%02s",App\Models\Statistique::inspectionEnAttente())}}</div>
 									</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-sm-6 col-md-3">
                             <div class="card">
                                 <div class="stat-widget-one">
 									<div class="stat-icon dib"><i class="ti-clipboard color-primary"></i></div>
 									<div class="stat-content dib">
-										<div class="stat-text">Audits planifiés</div>
+										<div class="stat-text">Audits</div>
 										<div class="stat-digit">{{ sprintf("%02s",App\Models\Statistique::auditPlanifie())}}</div>
 									</div>
                                 </div>
@@ -88,21 +88,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach (App\Models\Statistique::auditsRécents() as $alerte)
+                                            @foreach (App\Models\Statistique::auditsRécents() as $audit)
                                             <tr>
-                                                <td>{{$alerte->type}}</td>
-                                                <td><span class="badge badge-success">Audit</span></td>
-                                                <td>{{$alerte->updated_at->format('Y-m-d')}}</td>
-                                                <td>{{$alerte->etat}}</td>
+                                                <td>{{$audit->titre}}</td>
+                                                <td><span class="badge badge-primary">Audit</span></td>
+                                                <td>{{$audit->updated_at->format('Y-m-d')}}</td>
+                                                <td>{{$audit->etat}}</td>
                                                 <td></td>
                                             </tr>
                                             @endforeach
-                                            @foreach (App\Models\Statistique::inspectionsRécentes() as $alerte)
+                                            @foreach (App\Models\Statistique::inspectionsRécentes() as $inspection)
                                             <tr>
-                                                <td>{{$alerte->type}}</td>
+                                                <td>{{$inspection->titre}}</td>
                                                 <td><span class="badge badge-info">Inspection</span></td>
-                                                <td>{{$alerte->updated_at->format('Y-m-d')}}</td>
-                                                <td>{{$alerte->etat}}</td>
+                                                <td>{{$inspection->updated_at->format('Y-m-d')}}</td>
+                                                <td>{{$inspection->etat}}</td>
                                                 <td></td>
                                             </tr>
                                             @endforeach

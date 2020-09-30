@@ -29,7 +29,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="menu1" role="menu" style="height:500%; overflow:hidden; overflow-y:scroll;">
-                                @for($year = Carbon\Carbon::now('y')->subYears(10)->year; $year < Carbon\Carbon::now('y')->addYears(20)->year; $year++)
+                                @for($year = Carbon\Carbon::now('y')->subYears(5)->year; $year < Carbon\Carbon::now('y')->addYears(1)->year; $year++)
                                 <li role="presentation"><a role="menuitem" href="{{ route('statistiques.article',$year)}}">
                                     {{ $year }}
                                 </a></li>
@@ -71,13 +71,13 @@
                     <div class="col-lg-12">
                         <div class="card alert">
                             <div class="card-header m-b-10">
-                                <h4>Récapitulatif des Retours par Articles ( année : {{ $yearDisplayed }} )</h4>
+                                <h4>Récapitulatif des Retours par Articles</h4>
                             </div>
                             <div class="card-body card-content stats">
                                 <table class="table table-responsive table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th class="col-md-1 text-center" scope="col">Source\Mois</th>
+                                            <th class="col-md-1 text-center" scope="col">Article\Mois</th>
                                             @foreach (Helper::getMonths() as $month)
                                                 <th class="col-md-1 text-center" scope="col">
                                                     {{ $month }}</th>

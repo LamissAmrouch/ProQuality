@@ -18,7 +18,6 @@ class CreateFournisseursTable extends Migration
             $table->string('nom');
             $table->text('description')->nullable();
             $table->text('adresse')->nullable();
-            $table->unsignedBigInteger('note')->nullable();
             $table->timestamps();
         });
     }

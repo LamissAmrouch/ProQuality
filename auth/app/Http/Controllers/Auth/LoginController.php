@@ -38,18 +38,6 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        /*if (Auth::check() && Auth::user()->hasRole('admin')){
-            $this->redirectTo = route('user.dashbord');
-        } 
-        elseif (Auth::check() && Auth::user()->hasRole('gestionnaire')){
-            $this->redirectTo = route('home');
-        }
-        elseif (Auth::check() && Auth::user()->hasRole('gestionnaire')){
-            $this->redirectTo = route('produit.list');
-        }
-        else{ 
-            $this->redirectTo = route('home');
-        }       */ 
         $this->redirectTo = route('home');
         $this->middleware('guest')->except('logout');   
     }

@@ -70,13 +70,9 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="row">
-                                            <label for="metier" class="text-right p-t-10 col-md-4">{{ __('Métier') }}</label>
+                                            <label for="metier" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
                                             <div class="col-md-5">
-                                                <textarea name="description" class="form-control" rows="3" >
-                                                    @if(isset($atelier))
-                                                        {{ $atelier->description }}
-                                                    @endif  
-                                                </textarea>
+                                                <textarea name="description" class="form-control" rows="3">@if(isset($atelier)){{ $atelier->description }}@endif</textarea>
                                             </div>
                                         </div>
                                     </div>

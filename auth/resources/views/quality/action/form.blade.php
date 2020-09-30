@@ -58,18 +58,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
-                                            <div class="col-md-5">
-                                                <input id="description" type="text" class="form-control" name="description"
-                                                @if(isset($action))
-                                                    value="{{ $action->description }}" 
-                                                @endif
-                                                required autocomplete="description" autofocus>                                       
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div class="form-group">
                                         <div class="row">
                                             <label for="type" class="text-right p-t-10 col-md-4">{{ __('Type') }}</label>
@@ -82,18 +71,16 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="form-group">
                                         <div class="row">
-                                            <label for="materiel" class="text-right p-t-10 col-md-4">{{ __('Materiel') }}</label>
-                                            <div class="col-md-5">
-                                                <input id="materiel" type="text" class="form-control" name="materiel"
-                                                @if(isset($action))
-                                                    value="{{ $action->materiel }}" 
-                                                @endif
-                                                required autocomplete="materiel" autofocus>                                       
-                                            </div>
+                                            <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
+                                                <div class="col-md-5">
+                                                    <textarea name="description" class="form-control" rows="3" required>@if(isset($action)){{ $action->description }}@endif</textarea>                  
+                                                </div>                                 
                                         </div>
                                     </div>
+                                   
                                     <div class="form-group">
                                         <div class="row">
                                             <label for="resultat" class="text-right p-t-10 col-md-4">{{ __('Résultat') }}</label>

@@ -17,7 +17,6 @@ class CreateReglesTable extends Migration
             $table->bigIncrements('id');
             $table->string('titre');
             $table->string('contenu');
-            $table->enum('etat', ['brouillon','validé'])->default('brouillon');
             $table->unsignedBigInteger('user_id'); //executive user
             $table->unsignedBigInteger('produit_id');
             $table->timestamps();

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produit;
 use App\Models\Procede;
+use App\Models\Caracteristique;
 use App\Exports\ProduitsExport;
 use App\Imports\ProduitsImport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,8 +29,7 @@ class ProduitController extends Controller
     }
 
     public function index(){
-        $produits = Produit::all();
-        return view('simple.produit.index',compact('produits'));
+        return view('simple.produit.index');
     }
 
     public function create(){ 
@@ -39,21 +39,28 @@ class ProduitController extends Controller
 
     public function store(Request $request){
         $this->validate($request, [
-            'description' => 'required',
             'nom' => 'required',
             'modele' => 'required',
-            'type' => 'required',
-            'prix' => ['integer','required'],
-            'reference' => 'required'
+            'prix' => 'integer',
+            'description' => 'required'
         ]);
         $produit = new Produit;
         $produit->nom = $request->nom; 
         $produit->type = $request->type; 
         $produit->modele = $request->modele; 
-        $produit->reference = $request->reference; 
         $produit->prix = $request->prix; 
         $produit->description = $request->description;
         $produit->save(); 
+        if(!empty($request->nomc)){
+            /* insert all caracteristics one by one */
+            for ($i=0; $i < count($request->nomc) ; $i++) { 
+                $caracteristique = new Caracteristique;
+                $caracteristique->nom = $request->nomc[$i]; 
+                $caracteristique->produit_id = $produit->id;  
+                $caracteristique->save();
+            }
+        }
+
         if(!empty($request->designationp)){
             /* insert all procede one by one */
             for ($i=0; $i < count($request->designationp) ; $i++) { 
@@ -75,19 +82,30 @@ class ProduitController extends Controller
 
     public function update(Request $request, Produit $produit){
         $this->validate($request,[
-            'description' => 'required',
             'nom' => 'required',
             'modele' => 'required',
             'type' => 'required',
-            'reference' => 'required'
+            'prix' => 'integer',
+            'description' => 'required'
         ]);
         $produit->nom = $request->nom; 
         $produit->type = $request->type; 
         $produit->modele = $request->modele; 
-        $produit->reference = $request->reference; 
         $produit->prix = $request->prix; 
         $produit->description = $request->description;
         $produit->save();
+
+        Caracteristique::where('produit_id', $produit->id)->delete();
+        if(!empty($request->nomc)){
+            /* insert all caracteristics one by one */
+            for ($i=0; $i < count($request->nomc) ; $i++) { 
+                $caracteristique = new Caracteristique;
+                $caracteristique->nom = $request->nomc[$i]; 
+                $caracteristique->produit_id = $produit->id;  
+                $caracteristique->save();
+            }
+        }
+        
         Procede::where('produit_id', $produit->id)->delete();
         if(!empty($request->designationp)){
             /* insert all procede one by one */

@@ -17,7 +17,7 @@ body {
   color: #001028;
   background: #FFFFFF; 
   font-family: Arial, sans-serif; 
-  font-size: 12px; 
+  font-size: 16px; 
   font-family: Arial;
 }
 
@@ -27,7 +27,7 @@ header {
 }
 
 #logo {
-  text-align: center;
+  text-align: left;
   margin-bottom: 10px;
 }
 
@@ -83,7 +83,7 @@ table tr:nth-child(2n-1) td {
 
 table th,
 table td {
-  text-align: center;
+  text-align: right;
 }
 
 table th {
@@ -92,6 +92,17 @@ table th {
   border-bottom: 1px solid #C1CED9;
   white-space: nowrap;        
   font-weight: normal;
+}
+
+.titre
+{
+  
+  color:  #001028;
+  font-size: 1.2em;
+  line-height: 1.4em;
+  font-weight: normal;
+  text-align: left;
+  margin: 0 0 20px 0;
 }
 
 table .service,

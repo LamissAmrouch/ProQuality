@@ -14,70 +14,70 @@ class CaracteristiqueTableSeeder extends Seeder
     public function run()
     {
         DB::table('caracteristiques')->insert([ 
-            'nom' => '4 GB',
+            'nom' => '4 Go',
             'produit_id' => '1',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '8 GB',
+            'nom' => '8 Go',
             'produit_id' => '1',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '16 GB',
+            'nom' => '16 Go',
             'produit_id' => '1',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '32 GB',
+            'nom' => '32 Go',
             'produit_id' => '1',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '64 GB',
+            'nom' => '64 Go',
             'produit_id' => '1',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '16 GB',
+            'nom' => '16 Go',
             'produit_id' => '2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '32 GB',
+            'nom' => '32 Go',
             'produit_id' => '2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '64 GB',
+            'nom' => '64 Go',
             'produit_id' => '2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '128 GB',
+            'nom' => '128 Go',
             'produit_id' => '2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
 
         DB::table('caracteristiques')->insert([ 
-            'nom' => '256 GB',
+            'nom' => '256 Go',
             'produit_id' => '2',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -156,12 +156,199 @@ class CaracteristiqueTableSeeder extends Seeder
             'nom' => '4 GB',
             'produit_id' => '7',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        ]);
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')       
+        ]);
 
         DB::table('caracteristiques')->insert([ 
             'nom' => '8 GB',
             'produit_id' => '7',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        ]);
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Rouge',
+            'produit_id' => '8',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Vert',
+            'produit_id' => '8',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Bleu',
+            'produit_id' => '8',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Male',
+            'produit_id' => '9',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Female',
+            'produit_id' => '9',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => '1 m',
+            'produit_id' => '10',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => '2 m',
+            'produit_id' => '10',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => '3 m',
+            'produit_id' => '10',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Rouge',
+            'produit_id' => '11',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Vert',
+            'produit_id' => '11',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Bleu',
+            'produit_id' => '11',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'USB 2.0',
+            'produit_id' => '12',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'USB 3.0',
+            'produit_id' => '12',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'RAM DDR',
+            'produit_id' => '12',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Micro A',
+            'produit_id' => '13',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Micro C',
+            'produit_id' => '13',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Micro iPhone',
+            'produit_id' => '13',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'USB A',
+            'produit_id' => '13',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Rouge',
+            'produit_id' => '14',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Vert',
+            'produit_id' => '14',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Bleu',
+            'produit_id' => '14',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Connecteur USB',
+            'produit_id' => '15',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Connecteur Micro USB',
+            'produit_id' => '15',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Connecteur Type C',
+            'produit_id' => '15',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Connecteur Iphone',
+            'produit_id' => '15',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'PC',
+            'produit_id' => '16',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Treflle',
+            'produit_id' => '16',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Onduleur',
+            'produit_id' => '16',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+        DB::table('caracteristiques')->insert([ 
+            'nom' => 'Catel',
+            'produit_id' => '16',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')        
+        ]);
+
+
+
     }
 }

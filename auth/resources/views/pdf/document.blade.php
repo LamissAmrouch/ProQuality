@@ -2,7 +2,6 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Example 1</title>
     <link rel="stylesheet" href="{{ asset('public/assets/css/style-pdf.css')}}" media="all" />
   </head>
   <body>

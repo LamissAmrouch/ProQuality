@@ -18,7 +18,6 @@ class CreateProduitsTable extends Migration
             $table->string('nom');
             $table->enum('type', ['Matiere premiere','Semi-fini', 'Fini']);
             $table->string('modele')->nullable();
-            $table->string('reference')->nullable();
             $table->string('description')->nullable();
             $table->unsignedBigInteger('prix')->nullable();
             $table->timestamps();

@@ -16,6 +16,7 @@ class ProduitTableSeeder extends Seeder
             'id' => '1',
             'nom' => 'Flash disque 2.0',
             'type' => 'Fini',
+            'modele' => 'MANHATTAN',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
@@ -24,6 +25,7 @@ class ProduitTableSeeder extends Seeder
             'id' => '2',
             'nom' => 'Flash disque 3.0',
             'type' => 'Fini',
+            'modele' => 'MANHATTAN',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
@@ -31,6 +33,7 @@ class ProduitTableSeeder extends Seeder
         DB::table('produits')->insert([ 
             'id' => '3',
             'nom' => 'Souris',
+            'modele' => 'AS47',
             'type' => 'Fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -39,6 +42,7 @@ class ProduitTableSeeder extends Seeder
         DB::table('produits')->insert([ 
             'id' => '4',
             'nom' => 'Chargeur',
+            'modele' => 'DIAMOND',
             'type' => 'Fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -46,7 +50,8 @@ class ProduitTableSeeder extends Seeder
 
         DB::table('produits')->insert([ 
             'id' => '5',
-            'nom' => 'Cable USB',
+            'nom' => 'Câble USB',
+            'modele' => 'CBL3IP',
             'type' => 'Fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -54,7 +59,8 @@ class ProduitTableSeeder extends Seeder
 
         DB::table('produits')->insert([ 
             'id' => '6',
-            'nom' => 'Cable alimentation',
+            'nom' => 'Câble alimentation',
+            'modele' => 'CEA',
             'type' => 'Fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -63,6 +69,7 @@ class ProduitTableSeeder extends Seeder
         DB::table('produits')->insert([ 
             'id' => '7',
             'nom' => 'RAM DDR3',
+            'modele' => 'DDRIII',
             'type' => 'Fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -110,7 +117,7 @@ class ProduitTableSeeder extends Seeder
 
         DB::table('produits')->insert([ 
             'id' => '13',
-            'nom' => 'Connecteur FD',
+            'nom' => 'Connecteur USB',
             'type' => 'Semi-fini',
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
@@ -123,5 +130,23 @@ class ProduitTableSeeder extends Seeder
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
         ]);
+
+        DB::table('produits')->insert([ 
+            'id' => '15',
+            'nom' => 'Connecteur',
+            'type' => 'Matiere premiere',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
+        ]);
+
+        DB::table('produits')->insert([ 
+            'id' => '16',
+            'nom' => 'Câble',
+            'type' => 'Matiere premiere',
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')      
+        ]);
+
+
     }
 }

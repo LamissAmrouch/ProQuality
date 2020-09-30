@@ -32,18 +32,18 @@
                                       <h4>Liste des Articles</h4>
                                     </div>
                                     <div class="col-lg-6">
-                                      <div class="text-right">  
-                                        <button type="button" class="btn btn-info btn-addon m-b-10 m-l-5" 
-                                            data-toggle="modal" id="modal-toggle" data-target="#modalImporter">
-                                            <i class="ti-download"></i>Importer</button>
-                                        <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('produit.export') }}">
-                                            <i class="ti-upload"></i>Exporter
-                                        </a>
-                                          <a href="{{ route('produit.create')}}">
-                                            <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
-                                                <i class="ti-plus"></i>Ajouter un article</button>                 
-                                          </a>
-                                      </div>        
+                                        <div class="text-right">  
+                                            <button type="button" class="btn btn-info btn-addon m-b-10 m-l-5" 
+                                                data-toggle="modal" id="modal-toggle" data-target="#modalImporter">
+                                                <i class="ti-download"></i>Importer</button>
+                                            <a class="btn btn-warning btn-addon m-b-10 m-l-5" href="{{ route('produit.export') }}">
+                                                <i class="ti-upload"></i>Exporter
+                                            </a>
+                                            <a href="{{ route('produit.create')}}">
+                                                <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
+                                                    <i class="ti-plus"></i>Ajouter un article</button>                 
+                                            </a>
+                                        </div>        
                                     </div>
                                 <br><br>
                                 <!-- to Show sweet alert success message -->
@@ -53,7 +53,7 @@
                                     <script type="text/javascript">
                                         $(document).ready(function(){
                                             swal({
-                                            title: "Bravo!",
+                                            title: "Réussi",
                                             text: $("#success-msg").text(),
                                             type: "success",
                                             showConfirmButton: true
@@ -69,27 +69,28 @@
                                             <th>ID</th>
                                             <th>Nom</th>
                                             <th>Type</th>
-                                            <th>Modele</th>
-                                            <th>Réference</th>
-                                            <th>Prix</th>
+                                            <th>Modèle</th>
                                             <th>Action(s)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    @if(Auth::user()->hasDirectPermission('edit fournisseur'))
+                                        @php($produits = App\Models\Produit::where('type','=','Matiere Premiere')->get())
+                                    @else
+                                        @if(Auth::user()->hasDirectPermission('edit client'))
+                                            @php($produits = App\Models\Produit::where('type','=','Fini')->get())
+                                        @else
+                                            @php($produits = App\Models\Produit::all())
+                                        @endif
+                                    @endif
                                     @foreach($produits as $produit)
                                         <tr>
                                             <th scope="row"> <span class="badge badge-primary">{{ $produit->id }} </span> </th>
                                             <td>{{ $produit->nom }}</td>
                                             <td>{{ $produit->type }}</td>
                                             <td>{{ $produit->modele }}</td>
-                                            <td>{{ $produit->reference }}</td>
-                                            <td>{{ $produit->prix }}</td>
+                                            
                                             <td>
-                                                <a style="text-decoration:none;color:#ffffff;" href="{{ route('produit.edit',$produit )}}"> 
-                                                    <button class="btn btn-info btn-sm"> 
-                                                            <i class="ti-eye" aria-hidden="true"></i> 
-                                                    </button>
-                                                </a>  
                                                 <a style="text-decoration:none;color:#ffffff;" href="{{ route('produit.edit',$produit )}}"> 
                                                     <button class="btn btn-warning btn-sm"> 
                                                             <i class="ti-pencil-alt" aria-hidden="true"></i> 

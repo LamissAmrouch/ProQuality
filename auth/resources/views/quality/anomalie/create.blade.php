@@ -85,21 +85,17 @@
                                                 <div class="row">
                                                     <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
                                                     <div class="col-md-5">
-                                                        <textarea name="description" class="form-control" rows="3" required autofocus>  
-                                                            @if(isset($anomalie->description))
-                                                                {{ $anomalie->description }} 
-                                                                @endif
-                                                        </textarea>                                         
+                                                        <textarea name="description" class="form-control" rows="3" required autofocus>@if(isset($anomalie->description)){{ $anomalie->description }}@endif</textarea>                                         
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <label for="type" class="text-right p-t-10 col-md-4">{{ __('Types') }}</label>
+                                                    <label for="type" class="text-right p-t-10 col-md-4">{{ __('Type') }}</label>
                                                     <div class="col-md-5">
-                                                        <select id="type" class="form-control" name="type" required>
+                                                        <select id="typeProduit" class="form-control" name="type" onchange="showTypeProduit()">
                                                             <option value="" disabled selected>Selectionnez le type</option>
-                                                            <option @if(isset($anomalie) && $anomalie->type == 'Retour fournisseur') selected='selected' @endif value="Retour fournisseur">Retour fournisseur</option>
+                                                            <option  @if(isset($anomalie) && $anomalie->type == 'Retour fournisseur') selected='selected' @endif value="Retour fournisseur">Retour fournisseur</option>
                                                             <option  @if(isset($anomalie) && $anomalie->type == 'Retour client') selected='selected' @endif value="Retour client">Retour client</option>
                                                             <option  @if(isset($anomalie) && $anomalie->type == 'Retour production') selected='selected' @endif  value="Retour production">Retour production</option>
                                                             </select>
@@ -147,7 +143,7 @@
                                                 <div class="row">
                                                     <label for="atelier" class="text-right p-t-10 col-md-4">{{ __('Atelier') }}</label>
                                                     <div class="col-md-5">
-                                                        <select class="form-control" name="client">
+                                                        <select class="form-control" name="atelier">
                                                             <option value="" disabled selected>Selectionnez l'atelier</option>
                                                                 @foreach(App\Models\Atelier::all() as $atelier)
                                                                     <option value="{{ $atelier->id }}"
@@ -165,7 +161,7 @@
                                                 <div class="row">
                                                     <label for="atelier" class="text-right p-t-10 col-md-4">{{ __('Article') }}</label>
                                                     <div class="col-md-5">
-                                                        <select id="produit" class="form-control" name="produit"  onchange="showCaractersticProduit()">
+                                                        <select id="produit" class="form-control" name="produit" onchange="showCaractersticProduit()">
                                                             <option value="" disabled selected>Selectionnez le produit</option>
                                                             @if(isset($anomalie) && $anomalie->type == "Retour fournisseur" ))
                                                                 @foreach(App\Models\Produit::where('type','=','Matiere premiere')->get() as $produit)
@@ -188,6 +184,28 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                                                                     
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label for="caracteristique" class="text-right p-t-10 col-md-4">{{ __('Caractéristique') }}</label>
+                                                    <div class="col-md-5">
+                                                        <select id="caracteristique" class="form-control" name="caracteristiquep">
+
+                                                        @if(isset($anomalie->lot))
+                                                            @foreach (App\Models\Caracteristique::where('produit_id','=',$anomalie->lot->produit->id)->get() as $c)
+                                                                <option value="{{ $c->nom }}"
+                                                                    @if(isset($anomalie->lot->caracteristiquep) && $anomalie->lot->caracteristiquep == $c->nom)
+                                                                        selected
+                                                                    @endif>
+                                                                    {{ $c->nom }}
+                                                                </option>
+                                                            @endforeach
+                                                        @endif
+                                                        </select>                          
+                                                    </div>
+                                                </div>
+                                            </div>    
+
                                             <div class="form-group">
                                                 <div class="row">
                                                     <label for="quantite" class="text-right p-t-10 col-md-4">{{ __('Quantité') }}</label>
@@ -199,20 +217,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <label for="caracteristique" class="text-right p-t-10 col-md-4">{{ __('Caractéristique') }}</label>
-                                                    <div class="col-md-5">
-                                                        <select id="caracteristique" class="form-control" name="caracteristiquep">
-                                                            @if(isset($anomalie->lot->caracteristiquep))
-                                                                <option value="{{ $anomalie->lot->caracteristiquep }}" selected>
-                                                                    {{ $anomalie->lot->caracteristiquep }}
-                                                                </option>
-                                                            @endif
-                                                        </select>                          
-                                                    </div>
-                                                </div>
-                                            </div>                                                                  
+
                                             <div class="form-group">
                                                 <div class="row">
                                                     <label for="test" class="text-right p-t-10 col-md-4">{{ __('Test') }}</label>
@@ -251,7 +256,7 @@
                                         </form>                                    
                                     </div>
                                     <div id="test-nl-2" class="content">
-                                        <form action="{{route('anomalie.create-step2')}}" method="POST" >
+                                        <form id="form2" action="{{route('anomalie.create-step2')}}" method="POST" >
                                             {{ csrf_field() }}
                                             @isset($anomalie)<input type="hidden" name="id" class="form-control" value="{{ $anomalie->id }}" /> @endisset
                                             @isset($anomalie->test_id)
@@ -349,7 +354,7 @@
                                                             </button>                 
                                                         </a>
                                                         @endisset
-                                                        <button class="btn btn-primary sweet-success btn-addon m-b-10 m-l-5" type="submit">
+                                                        <button onclick="verifyExams()" class="btn btn-primary sweet-success btn-addon m-b-10 m-l-5" type="button">
                                                             <i class="ti-angle-double-right"></i>{{ __('Suivant') }}
                                                         </button> 
                                                     </div>
@@ -359,30 +364,14 @@
                                         </form>  
                                     </div>                                      
                                     <div id="test-nl-3" class="content">
-                                        @if(isset($anomalie->productImg))
-                                            Product Image:
-                                            <img alt="Product Image" src="/storage/productimg/{{$anomalie->productImg}}"/>
-                                        @endif
                                         <form action="{{route('anomalie.create-step3')}}" method="POST" enctype="multipart/form-data">
                                             {{ csrf_field() }}
                                             @isset($anomalie)<input type="hidden" name="id" class="form-control" value="{{ $anomalie->id }}" /> @endisset
                                             <div class="form-group">
                                                 <div class="row">
-                                                    <label for="diagnostique" class="text-right p-t-10 col-md-4">{{ __('Diagnostique') }}</label>
-                                                    <div class="col-md-5">
-                                                        <input id="diagnostique" type="text" class="form-control" name="diagnostique"
-                                                        @if(isset($anomalie->diagnostique))
-                                                            value="{{ $anomalie->diagnostique }}" 
-                                                        @endif
-                                                        required autocomplete="diagnostique" autofocus>                   
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="row">
                                                     <label for="actions" class="text-right p-t-10 col-md-4">{{ __('Actions') }}</label>
                                                     <div class="col-md-5">
-                                                        <select id="actions" class="form-control"  name="actions[]" multiple>
+                                                        <select id="actions" class="form-control"  name="actions[]" multiple required>
                                                             <option value="" disabled selected>Choisir/Introduire les actions</option>
                                                             @foreach(App\Models\Action::all() as $action)
                                                                 <option value="{{ $action->id }}"   
@@ -399,6 +388,17 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label for="diagnostique" class="text-right p-t-10 col-md-4">{{ __('Diagnostic') }}</label>
+                                                    <div class="col-md-5">
+                                                        <textarea name="diagnostique" class="form-control" rows="3" required autofocus>@if(isset($anomalie->diagnostique)){{ $anomalie->diagnostique }}@endif</textarea>
+                                                                         
+                                                    </div>
+                                                </div>
+                                            </div>
+
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-4"></div>
@@ -411,34 +411,44 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group reparateur-row" style="display:none;">
+                                          
+                                            <div class="form-group reparateur-row"  style="display:none;">
                                                 <div class="row">	
                                                     <label for="reparateur" class="text-right p-t-10 col-md-4">{{ __('Réparateur') }}</label>	
                                                     <div class="col-md-5">
                                                         <select id="reparateur" class="form-control" name="reparateur">	                                                        
                                                             <option value="" disabled selected>Choisir le réparateur</option>	                                                        
-                                                            @foreach(App\User::all() as $user)	                                                        
+                                                            @foreach(App\User::where('service', '=' , 'Réparation')->get() as $user)	                                                        
                                                                 <option value="{{ $user->id }}"	                                                                    
-                                                                    @if( isset($anomalie->reparateur) && $anomalie->reparateur->nom == $user->nom )	                                                    
+                                                                    @if(isset($anomalie->reparateur_id) && $anomalie->reparateur->nom == $user->nom )	                                                    
                                                                         selected	                                                
                                                                     @endif	                                            
-                                                                    >{{ $user->nom }}</option>	                                            
+                                                                    >{{ $user->nom  }} {{ $user->prenom  }}</option>	                                            
                                                             @endforeach	                                                
                                                         </select>	                                                           
                                                     </div>  
                                                 </div>  
                                             </div>
-                                            <div class="form-group reparateur-row" style="display:none;">
+
+                                            <div class="form-group reparateur-row"  style="display:none;" >
                                                 <div class="row">
-                                                    <label for="productImg" class="text-right p-t-10 col-md-4">{{ __('Fiche de réparation') }}</label>
+                                                    <label for="productimg" class="text-right p-t-10 col-md-4">{{ __('Fiche de réparation') }}</label>
                                                     <div class="col-md-5">
-                                                        <input type="file" {{ (!empty($anomalie->productImg)) ? "disabled" : ''}} 
-                                                        class="form-control-file" name="productimg" id="productimg" aria-describedby="fileHelp">
-                                                        <small id="fileHelp" class="form-text text-muted">Please upload a valid file. 
-                                                        Size of file should not be more than 2MB.</small>
+                                                        @if(isset($anomalie->productimg))
+                                                        <div id="fiche">
+                                                            <a href="{{ asset('storage/app/ficheReparation/'.$anomalie->productimg) }}" target="_blank">
+                                                                <img src="{{ asset('storage/app/ficheReparation/'.$anomalie->productimg) }}" /></a>
+                                                        </div>
+                                                        @endif
+                                                        <input type="file" class="form-control-file" name="productimg" id="productimg" 
+                                                        aria-describedby="fileHelp">
+                                                        <small id="fileHelp" class="form-text text-muted">Veuillez choisir un fichier valide
+                                                            (jpeg,png,jpg,gif,svg). 
+                                                        </small>
                                                     </div>
                                                 </div>
                                             </div>
+                                        
                                             <div class="row">
                                                 <div class="col text-center">
                                                     @isset($anomalie)
@@ -508,28 +518,12 @@
                                                     </div>           
                                                 </div>           
                                             </div>           
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <label for="users" class="text-right p-t-10 col-md-4">{{ __('Utilisateurs à notifier') }}</label>
-                                                    <div class="col-md-5">
-                                                        <select id="users" class="form-control" name="users[]" multiple>
-                                                            <option value="" disabled selected>Notifier les utilisateur(s)</option>
-                                                            @foreach(App\User::all() as $user)
-                                                                <option value="{{ $user->id }}">{{ $user->nom }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                           
                                             <div class="form-group">
                                                 <div class="row">
                                                     <label for="cause" class="text-right p-t-10 col-md-4">{{ __('Cause racine') }}</label>
                                                     <div class="col-md-5">
-                                                        <input id="cause" type="text" class="form-control" name="cause" 
-                                                        @if(isset($anomalie->cause))
-                                                            value="{{ $anomalie->cause }}" 
-                                                        @endif
-                                                        required autocomplete="cause" autofocus>
+                                                        <textarea name="cause" class="form-control" rows="3" required autofocus>@if(isset($anomalie->cause)){{ $anomalie->cause }}@endif</textarea>
                                                     </div>
                                                 </div>
                                             </div>       
@@ -543,7 +537,7 @@
                                                     </a>
                                                     @endisset
                                                     <button class="btn btn-primary sweet-success btn-addon m-b-10 m-l-5" type="submit">
-                                                        <i class="ti-angle-double-right"></i>{{ __('Suivant') }}
+                                                        <i class="ti-angle-double-right"></i>{{ __('Enregistrer') }}
                                                     </button> 
                                                 </div>
                                             </div>
@@ -644,7 +638,7 @@
         </div>
 </div> 
 
-<div class="modal fade" id="modalAddAction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAddAction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -681,7 +675,7 @@
                             <div class="row">
                                 <label class="text-right p-t-10 col-md-3">Description</label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control" name="description" id="description" required>
+                                <input type="text" class="form-control" name="description" id="description" >
                             </div>
                             </div>
                             </div>
@@ -694,15 +688,7 @@
                             </div>
                             </div>
                             </div>
-
-                            <div class="form-group">
-                            <div class="row">
-                                <label class="text-right p-t-10 col-md-3">Matériel</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="materiel" id="materiel" required>
-                            </div>  
-                            </div>
-                            </div>  
+  
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -715,7 +701,8 @@
         </div>  
     </div> 
 
-<div class="modal fade" id="modalAddRegle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal fade" id="modalAddRegle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -726,40 +713,34 @@
                     <form id="AddRegleForm" action="{{ route('regle.store') }}" method="POST">
                         {{ csrf_field() }}               
                         @isset($anomalie)<input type="hidden" name="id" class="form-control" value="{{ $anomalie->id }}" /> @endisset
-                        
                         <div class="form-group">
-                        <div class="row">
-                            <label class="text-right p-t-10 col-md-2">Titre</label>
-                        <div class="col-md-10">
-                            <input type="text" class="form-control" name="titre" required>
+                            <div class="row">
+                                <label class="text-right p-t-10 col-md-2">Titre</label>
+                                <div class="col-md-10">
+                                    <input type="text" class="form-control" name="titre" required>
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                        </div>
-
                         <div class="form-group">
-                        <div class="row">
-                            <label  class="text-right p-t-10 col-md-2">Article </label>  
-                            <div class="col-md-10">                                         
-                            <select id="produit" class="form-control" name="produit"  required>
-                                <option value="" disabled selected>Sélectionnez l'article</option>
-                                @foreach(App\Models\Produit::all() as $produit)
-                                    <option value="{{ $produit->id }}">{{ $produit->nom }}</option>
-                                @endforeach
-                            </select>
+                            <div class="row">
+                                <label  class="text-right p-t-10 col-md-2">Article </label>  
+                                <div class="col-md-10"> 
+                                    @isset($anomalie)                                        
+                                    <select id="produit" class="form-control" name="produit" required>
+                                        <option value="{{ $anomalie->lot->produit->id }}" selected>{{ $anomalie->lot->produit->nom }}</option>
+                                    </select>
+                                    @endisset
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                        </div>
-
                         <div class="form-group">
-                        <div class="row">
-                            <label  class="text-right p-t-10 col-md-2">Contenu</label>
-                            <div class="col-md-10">
-                            <textarea name="contenu" class="form-control" rows="3" required>  
-                            </textarea>
-                        </div> 
+                            <div class="row">
+                                <label  class="text-right p-t-10 col-md-2">Contenu</label>
+                                <div class="col-md-10">
+                                    <textarea name="contenu" class="form-control" rows="3" required></textarea>
+                                </div> 
+                            </div>
                         </div>
-                        </div>
-
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
                             <button type="submit" class="btn btn-primary">Enregistrer</button>

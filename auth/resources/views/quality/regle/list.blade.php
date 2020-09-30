@@ -37,7 +37,7 @@
                                       <div class="text-right">  
                                           <a href="{{ route('regle.create')}}">
                                               <button type="button" class="btn btn-primary btn-addon m-b-10 m-l-5">
-                                                <i class="ti-plus"></i>Ajouter une regle</button>               
+                                                <i class="ti-plus"></i>Ajouter une règle</button>               
                                           </a>
                                       </div>        
                                     </div>
@@ -49,7 +49,7 @@
                                     <script type="text/javascript">
                                         $(document).ready(function(){
                                             swal({
-                                            title: "Bravo!",
+                                            title: "Réussi",
                                             text: $("#success-msg").text(),
                                             type: "success",
                                             showConfirmButton: true
@@ -63,8 +63,7 @@
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Titre</th>
-                                                <th>Contenu</th>
-                                                <th>Produit</th>
+                                                <th>Article</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -73,14 +72,9 @@
                                             <tr>
                                                 <th scope="row"> <span class="badge badge-primary">{{ $regle->id }} </span> </th>
                                                 <td>{{ $regle->titre }}</td>
-                                                <td>{{ $regle->contenu }}</td>
                                                 <td>{{ $regle->produit->nom }}</td>
                                                 <td>
-                                                    <a style="text-decoration:none;color:#ffffff;" href="{{ route('regle.edit',$regle )}}"> 
-                                                        <button class="btn btn-info btn-sm"> 
-                                                            <i class="ti-eye" aria-hidden="true"></i> 
-                                                        </button>
-                                                    </a>
+                                                    
                                                     <a style="text-decoration:none;color:#ffffff;" href="{{ route('regle.edit',$regle )}}"> 
                                                         <button class="btn btn-warning btn-sm"> 
                                                             <i class="ti-pencil-alt" aria-hidden="true"></i> 
@@ -121,9 +115,7 @@
 @endforeach
 </tbody>
 </table>
-
-
-
+{{ $regles->links()  }}
 </div>
 </div>
 

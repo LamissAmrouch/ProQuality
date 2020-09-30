@@ -58,7 +58,7 @@
                                     <div class="form-group row">
                                         <div class="col-md-2"></div>
                                         <div class="col-md-8">
-                                            <button class="btn btn-outline btn-default " type="submit">
+                                            <button class="btn btn-outline btn-default " id="btn-reset" type="submit">
                                                 Envoyer le lien de réinitialisation
                                             </button> 
                                         </div>

@@ -27,7 +27,7 @@ class FournisseurController extends Controller
     }
 
     public function index(){
-        $fournisseurs = Fournisseur::paginate(5);
+        $fournisseurs = Fournisseur::paginate(15);
         return view('simple.fournisseur.index',compact('fournisseurs'));
     }
 
@@ -40,14 +40,12 @@ class FournisseurController extends Controller
         $this->validate($request,[
             'nom' => 'required',
             'description' => 'required',
-            'note' => ['required', 'integer'],
             'adresse' => 'required'
         ]);
         $fournisseur = new Fournisseur;
         $fournisseur->nom = $request->nom; 
         $fournisseur->description = $request->description; 
         $fournisseur->adresse = $request->adresse; 
-        $fournisseur->note = $request->note; 
         $fournisseur->save();
         return redirect(route('fournisseur.list'))->with('successMsg',"Le fournisseur est ajouté avec succès");
     }
@@ -61,13 +59,11 @@ class FournisseurController extends Controller
         $this->validate($request,[
             'nom' => 'required',
             'description' => 'required',
-            'note' => ['required', 'integer'],
             'adresse' => 'required'
         ]);
         $fournisseur->nom = $request->nom; 
         $fournisseur->description = $request->description; 
         $fournisseur->adresse = $request->adresse; 
-        $fournisseur->note = $request->note; 
         $fournisseur->save();
         return redirect(route('fournisseur.list'))->with('successMsg',"Le fournisseur est modifié avec succès");
     }

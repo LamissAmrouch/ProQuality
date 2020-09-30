@@ -18,7 +18,7 @@
                     <div class="page-title">
                         <ol class="breadcrumb text-right">
                           <li><a href="{{ route('home')}}">Accueil</a></li>
-                          <li><a href="{{ route('alertRF.list')}}">Alertes retours marchandise</a></li>
+                          <li><a href="{{ route('alertRF.list')}}">Alertes retour fournisseur</a></li>
                           <li class="active">  
                             @if(!isset($alert))
                               {{ __('Créer') }}
@@ -49,12 +49,28 @@
                                  <div class="basic-form">
                                     <form action="{{ $action }}" method="POST"> 
                                         {{ csrf_field()}}
+                                          <div class="form-group">
+                                            <div class="row">
+                                              <label class="text-right p-t-10 col-md-4">Fournisseur</label>
+                                              <div class="col-md-5">                                           
+                                                <select class="form-control" name="fournisseur" required>
+                                                <option value="" disabled selected>Selectionnez le fournisseur</option>
+                                                  @foreach(App\Models\Fournisseur::all() as $fournisseur)
+                                                    <option value="{{ $fournisseur->id }}"
+                                                      @if (isset($alert) && ($alert->fournisseur->nom == $fournisseur->nom))
+                                                      selected
+                                                      @endif > {{ $fournisseur->nom }} </option>
+                                                    @endforeach
+                                                </select>
+                                              </div>
+                                            </div>
+                                          </div>
                                             <div class="form-group">
-                                              <div class="row" id="produit">
+                                              <div class="row">
                                                   <label class="text-right p-t-10 col-md-4">Matière Première</label>
                                                   <div class="col-md-5">                                           
-                                                    <select class="form-control" name="produit" required>
-                                                        <option value="" disabled selected>Selectionnez l'article</option>
+                                                    <select class="form-control" name="produit" id="produit" onchange="showCaractersticProduit()">
+                                                        <option value="" disabled selected>Selectionnez la matière première</option>
                                                           @foreach(App\Models\Produit::where('type','=','Matiere premiere')->get() as $produit)
                                                           <option value="{{ $produit->id }}"
                                                             @if (isset($alert) && ($alert->lot->produit->nom == $produit->nom))
@@ -63,6 +79,25 @@
                                                           > {{ $produit->nom }}</option>
                                                            @endforeach
                                                     </select>
+                                                  </div>
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <div class="row">
+                                                  <label for="caracteristique" class="text-right p-t-10 col-md-4">{{ __('Caractéristique') }}</label>
+                                                  <div class="col-md-5">
+                                                      <select id="caracteristique" class="form-control" name="caracteristiquep">
+                                                          @if(isset($alert->lot))
+                                                              @foreach (App\Models\Caracteristique::where('produit_id','=',$alert->lot->produit->id)->get() as $c)
+                                                                  <option value="{{ $c->nom }}"
+                                                                      @if(isset($alert->lot->caracteristiquep) && $alert->lot->caracteristiquep == $c->nom)
+                                                                          selected
+                                                                      @endif>
+                                                                      {{ $c->nom }}
+                                                                  </option>
+                                                              @endforeach
+                                                          @endif
+                                                      </select>                                       
                                                   </div>
                                               </div>
                                             </div>
@@ -80,22 +115,6 @@
                                             </div>
                                             <div class="form-group">
                                               <div class="row">
-                                                <label class="text-right p-t-10 col-md-4">Fournisseur</label>
-                                                <div class="col-md-5">                                           
-                                                  <select class="form-control" name="fournisseur" required>
-                                                  <option value="" disabled selected>Selectionnez le fournisseur</option>
-                                                    @foreach(App\Models\Fournisseur::all() as $fournisseur)
-                                                      <option value="{{ $fournisseur->id }}"
-                                                        @if (isset($alert) && ($alert->fournisseur->nom == $fournisseur->nom))
-                                                        selected
-                                                        @endif > {{ $fournisseur->nom }} </option>
-                                                      @endforeach
-                                                  </select>
-                                                </div>
-                                              </div>
-                                            </div>
-                                            <div class="form-group" id="motif">
-                                              <div class="row">
                                                 <label class="text-right p-t-10 col-md-4">Motif de retour</label>
                                                 <div class="col-md-5">                                           
                                                   <input type="text" class="form-control" name="motif"
@@ -105,15 +124,11 @@
                                                 </div>
                                               </div>
                                             </div> 
-                                            <div class="form-group" id="motif">
+                                            <div class="form-group">
                                               <div class="row">
                                                 <label class="text-right p-t-10 col-md-4">Description</label>
                                                 <div class="col-md-5">
-                                                  <textarea name="description" class="form-control" rows="4">  
-                                                    @if(isset($alert))
-                                                    {{ $alert->description }}
-                                                    @endif
-                                                </textarea>
+                                                  <textarea name="description" class="form-control" rows="4">@if(isset($alert)){{ $alert->description }}@endif</textarea>
                                                 </div>
                                               </div>
                                             </div>

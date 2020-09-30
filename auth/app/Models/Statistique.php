@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Client;
 use App\Models\Produit;
@@ -18,7 +17,8 @@ class Statistique extends Model
 {
     /** Accueil **/
     static function alerteNonTraite(){
-        return count(Alert::where("etat","=","nouveau")->where("user_id","=",Auth::user()->id)->get());
+        return count(Alert::where("etat","=","nouveau")
+        ->whereNotIn('type',['Rappel'])->where("user_id","=",Auth::user()->id)->get());
     }
     static function anomalieEnCours(){
         return count(Anomalie::where("etat","=","en cours")->get());
@@ -32,7 +32,7 @@ class Statistique extends Model
     }
 
     static function retoursRécents(){
-        return Alert::where("etat","=","nouveau")->orderBy('updated_at','desc')->limit(3)->get();
+        return Alert::where("etat","=","nouveau")->whereNotIn('type',['Rappel'])->orderBy('updated_at','desc')->limit(3)->get();
     }
     static function auditsRécents(){
         return Audit::where("etat","=","nouveau")->orderBy('updated_at','desc')->limit(2)->get();
@@ -43,13 +43,13 @@ class Statistique extends Model
 
     /** Retours **/
     static function findbyType($type,$year){
-        return Alert::where("type","=",$type)->whereYear('updated_at','=',$year);
+        return Alert::where("type","=",$type)->whereYear('created_at','=',$year);
     }
 
     static function retourParMoisType($mois,$year,$type){
 
         $sum = 0;
-        foreach(Statistique::findbyType($type,$year)->whereMonth('updated_at','=',$mois)->get() as $alert){
+        foreach(Statistique::findbyType($type,$year)->whereMonth('created_at','=',$mois)->get() as $alert){
             $sum += $alert->lot->quantite;
         }
         return $sum;
@@ -76,7 +76,8 @@ class Statistique extends Model
     // retour par critere client
     static function retourParClient($id,$year){
         $sum = 0;
-        $alerts = Alert::where("type","=",'Retour client')->whereYear('updated_at','=',$year)->get();// retour client
+        $alerts = Alert::where("type","=",'Retour client')
+        ->whereYear('created_at','=',$year)->get();// retour client
         
         foreach( $alerts as $alert){
              if ($alert->client_id == $id)
@@ -90,7 +91,8 @@ class Statistique extends Model
     // retour par critere atelier
     static function retourParAtelier($id,$year){
         $sum = 0;
-        $alerts = Alert::where("type","=",'Retour production')->whereYear('updated_at','=',$year)->get();// retour production
+        $alerts = Alert::where("type","=",'Retour production')
+        ->whereYear('created_at','=',$year)->get();// retour production
         
         foreach( $alerts as $alert){
              if ($alert->atelier_id == $id)
@@ -104,13 +106,14 @@ class Statistique extends Model
     // retour par critere fournisseur
     static function retourParFournisseur($id,$year){
         $sum = 0;
-        $alerts = Alert::where("type","=",'Retour fournisseur')->whereYear('updated_at','=',$year)->get();// retour fournisseur
+        $alerts = Alert::where("type","=",'Retour fournisseur')
+        ->whereYear('created_at','=',$year)->get();// retour fournisseur
         
         foreach( $alerts as $alert){
-             if ($alert->fournisseur_id == $id)
-             {
-                $sum += $alert->lot->quantite;
-             }
+            if ($alert->fournisseur_id == $id)
+            {
+            $sum += $alert->lot->quantite;
+            }
         }
         return $sum;
     }
@@ -118,7 +121,7 @@ class Statistique extends Model
      /** Retours par article et type **/
      static function retourParArticleType($nom,$type,$year){
         $sum = 0;
-        $alerts = Alert::where("type","=",$type)->whereYear('updated_at','=',$year)->get();
+        $alerts = Alert::where("type","=",$type)->whereYear('created_at','=',$year)->get();
         
         foreach( $alerts as $alert){
              if ($alert->lot->produit->nom == $nom)
@@ -132,7 +135,7 @@ class Statistique extends Model
 
     /** Retour par Article **/
     static function findRetourByArticle($article,$year){
-        $alerts = Alert::whereYear("updated_at","=",$year)->get();
+        $alerts = Alert::whereYear("created_at","=",$year)->whereNotIn('type',['Rappel'])->get();
         $sum = 0;
         foreach ($alerts as $alert) {
             if($alert->lot->produit->id == $article->id){
@@ -153,7 +156,7 @@ class Statistique extends Model
     }
 
     static function findRetourByTypeArticle($type,$year){
-        $alerts = Alert::whereYear("updated_at","=",$year)->get();
+        $alerts = Alert::whereYear("created_at","=",$year)->whereNotIn('type',['Rappel'])->get();
         $sum = 0;
         foreach ($alerts as $alert) {
             if($alert->lot->produit->type == $type){
@@ -173,7 +176,8 @@ class Statistique extends Model
         return $retourParTypeArticle;
     }
     static function retourParMoisArticle($mois,$year,$article){
-        $alerts = Alert::whereYear("updated_at","=",$year)->whereMonth("updated_at","=",$mois)->get();
+        $alerts = Alert::whereYear("created_at","=",$year)->whereNotIn('type',['Rappel'])
+        ->whereMonth("created_at","=",$mois)->get();
         $sum = 0;
         foreach ($alerts as $alert){
             if($alert->lot->produit->id == $article->id){

@@ -70,24 +70,9 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="row">
-                                                <label for="note" class="text-right p-t-10 col-md-4">{{ __('Note') }}</label>
-                                                <div class="col-md-5">
-                                                    <input type="text" class="form-control" name="note" id="note" 
-                                                    @if(isset($client))
-                                                        value="{{ $client->note }}" 
-                                                    @endif required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="row">
                                                 <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
                                                 <div class="col-md-5">
-                                                    <textarea name="description" class="form-control" rows="3" >
-                                                        @if(isset($client))
-                                                            {{ $client->description }}
-                                                        @endif  
-                                                    </textarea>
+                                                    <textarea name="description" class="form-control" rows="3">@if(isset($client)){{ $client->description }}@endif</textarea>
                                                 </div>
                                             </div>
                                         </div>

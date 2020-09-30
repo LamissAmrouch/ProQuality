@@ -25,11 +25,11 @@
                     <div class="col pull-right m-b-10 m-r-40">
                         <div class="row">
                             <div class="dropdown" style="display: inline-block;">
-                                <button id="menu1" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"> Filtrer par année
+                                <button id="menu1" class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown"> Filtrer par année
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="menu1" role="menu" style="height:500%; overflow:hidden; overflow-y:scroll;">
-                                    @for($year = Carbon\Carbon::now('y')->subYears(10)->year; $year < Carbon\Carbon::now('y')->addYears(20)->year; $year++)
+                                    @for($year = Carbon\Carbon::now('y')->subYears(5)->year; $year < Carbon\Carbon::now('y')->addYears(1)->year; $year++)
                                     <li role="presentation"><a role="menuitem" href="{{ route('statistiques.retourClient',$year)}}">
                                         {{ $year }}
                                     </a></li>

@@ -18,7 +18,7 @@
                             <div class="page-title">
                                 <ol class="breadcrumb text-right">
                                     <li><a href="{{ route('home')}}">Accueil</a></li>
-                                    <li class="active"><a href="{{ route('alertRC.list')}}">Alertes retours clients</a></li>
+                                    <li class="active"><a href="{{ route('alertRC.list')}}">Alertes retour client</a></li>
                                 </ol>
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                                         <script type="text/javascript">
                                             $(document).ready(function(){
                                                 swal({
-                                                title: "Bravo!",
+                                                title: "Réussi",
                                                 text: $("#success-msg").text(),
                                                 type: "success",
                                                 showConfirmButton: true
@@ -67,7 +67,7 @@
                                                 <th>Caracteristique</th>
                                                 <th>Quantité</th>
                                                 <th>Client</th>
-                                                <th>Motif</th>
+                                              
                                                 <th>Etat</th>
                                                 @role('simple')
                                                 <th>Action</th>
@@ -84,8 +84,8 @@
                                                 <td>{{ $alert->lot->produit->nom }}</td>
                                                 <td>{{ $alert->lot->caracteristiquep }}</td>
                                                 <td>{{ $alert->lot->quantite }}</td>
-                                                <td class="color-primary"> {{ $alert->client->nom }}</td>
-                                                <td> {{ $alert->motif }}</td>
+                                                <td> {{ $alert->client->nom }}</td>
+                                               
                                                 <td>
                                                     @if ($alert->etat == "nouveau")
                                                         <span class="badge badge-info">
@@ -98,11 +98,12 @@
                                                 </td>
                                                 @role('simple')
                                                 <td>
-                                                    <a style="text-decoration:none;color:#ffffff;" href="{{ route('alertRC.edit',$alert )}}"> 
+                                                    <a style="text-decoration:none;color:#ffffff;" href="{{ route('alertRC.view',$alert )}}"> 
                                                         <button class="btn btn-info btn-sm"> 
-                                                                <i class="ti-eye" aria-hidden="true"></i> 
+                                                            <i class="ti-eye" aria-hidden="true"></i> 
                                                         </button>
-                                                    </a> 
+                                                    </a>
+                                                    @if($alert->etat == "nouveau")
                                                     <a style="text-decoration:none;color:#ffffff;" href="{{ route('alertRC.edit',$alert )}}"> 
                                                         <button class="btn btn-warning btn-sm"> 
                                                             <i class="ti-pencil-alt" aria-hidden="true"></i> 
@@ -139,12 +140,14 @@
                                                                                                     
                                                     <i class="ti-trash" aria-hidden="true"></i>                                                  
                                                     </button> 
+                                                @endif
                                                 </td> 
                                                 @endrole
                                             </tr>              
                                             @endforeach
                                         </tbody>
                                 </table>
+                                {{ $alerts->links()  }}
                             </div>
                         </div>
                     </div>  

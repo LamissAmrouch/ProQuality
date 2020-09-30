@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Regle;
 use App\Models\User;
 use App\Models\Produit;
+use App\Models\Audit;
 use Auth;
 use App\Models\Anomalie;
 
@@ -22,10 +23,9 @@ class RegleController extends Controller
       return view('quality.regle.form', compact('action','produits'));
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->validate($request,[
-             'titre' => 'required',
+             'titre' => ['required'],
              'produit' => 'required',
              'contenu' => 'required'
         ]);
@@ -40,15 +40,23 @@ class RegleController extends Controller
             return view('quality.anomalie.create', compact('anomalie'));
         }
         else{
-            $regle->produit_id = $request->produit;
-            $regle->save();
-            return redirect(route('regle.list'))->with('successMsg',"Création d'une nouvelle règle qualité");
+            if(!empty($request->idAudit) ){
+                $audit = Audit::findOrFail($request->idAudit);
+                $regle->produit_id = $request->produit;
+                $regle->save();
+                return view('quality.audit.create', compact('audit'));
+            }
+            else{
+                $regle->produit_id = $request->produit;
+                $regle->save();
+                return redirect(route('regle.list'))->with('successMsg',"Création d'une nouvelle règle qualité");
+            }    
         }
     }
 
     public function show()
     {    
-        $regles = Regle::all();
+        $regles = Regle::paginate(10);
         return view('quality.regle.list',compact('regles'));
     }
 

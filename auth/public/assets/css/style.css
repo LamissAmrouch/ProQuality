@@ -144,7 +144,17 @@ body {
   font-size: 1.5rem;
   font-weight: 400;
 }
-
+#fiche img{
+  border: 2px solid #ffffff;
+  height: 400px;
+  width: 100%;
+}
+#btn-reset{
+  color: #878787;
+}
+#btn-reset:hover, #btn-reset:active, #btn-reset:focus{
+  color: #FFFFFF;
+}
 a,
 button {
   outline: none !important;
@@ -1557,7 +1567,7 @@ Widget list
     vertical-align: top;
     float: left; }
     .stat-widget-one .stat-icon i {
-      font-size: 2.7rem;
+      font-size: 2.5rem;
       border-width: 3px;
       border-style: solid;
       border-radius: 100px;
@@ -1955,8 +1965,7 @@ thead tr th {
   color: #000000;
   font-weight: normal;
   text-transform: uppercase; }
-  thead tr th:last-child {
-    text-align: right; }
+
 
 tbody tr th {
   color: #000000;
@@ -1965,8 +1974,7 @@ tbody tr th {
 tbody tr td {
   font-family: Poppins, sans-serif;
   color: #000000; }
-  tbody tr td:last-child {
-    text-align: right; }
+
 
 .table > tbody > tr > td,
 .table > tbody > tr > th,
@@ -1993,9 +2001,10 @@ Login
   border-color: #F12559;
 }
 .background-login{
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
 }
 
 .login-logo {

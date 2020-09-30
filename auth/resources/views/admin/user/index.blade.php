@@ -47,7 +47,7 @@
                     <script type="text/javascript">
                         $(document).ready(function(){
                             swal({
-                              title: "Bravo!",
+                              title: "Réussi",
                               text: $("#success-msg").text(),
                               type: "success",
                               showConfirmButton: true
@@ -83,11 +83,6 @@
                                       @endforeach
                                 </td>
                                  <td>
-                                    <button class="btn btn-info btn-sm"> 
-                                      <a style="text-decoration:none;color:#ffffff;" href="{{ route('user.edit',$user) }}"> 
-                                        <i class="ti-eye" aria-hidden="true"></i> 
-                                      </a> 
-                                    </button>
                                     <button class="btn btn-warning btn-sm"> 
                                       <a style="text-decoration:none;color:#ffffff;" href="{{ route('user.edit',$user ) }}"> 
                                         <i class="ti-pencil-alt" aria-hidden="true"></i> 

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Lot;
 use App\Models\Test;
 use App\Models\Inspection;
+use App\Models\Alert;
 use App\Models\Produit;
 use App\Models\Examen;
 use App\Models\Reponse;
@@ -14,11 +15,20 @@ use App\Models\Event;
 use Auth;
 use Carbon\Carbon;
 use Redirect,Response;
+use PDF;
+use App\Exports\InspectionsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
-class InspectionController extends Controller
-{
+
+class InspectionController extends Controller{
+
+    public function export(){      
+        $year = Carbon::now()->format('Y');
+        return (new InspectionsExport($year))->download('Journal des inspections '.$year.'.xlsx');
+    }
+
     public function index(){
-    	$inspections = Inspection::paginate(5);
+    	$inspections = Inspection::orderBy('id','desc')->paginate(10);
     	return view('quality.inspection.index',compact('inspections'));
     }
 
@@ -39,57 +49,69 @@ class InspectionController extends Controller
         $produits = Produit::where('type', '=' , 'Fini' )->get();
         return view('quality.inspection.create', compact('inspection','produits'));
     }
-    public function postCreateStep1(Request $request){   
-        if(empty($request->id)){
-            $inspection = new Inspection();
-        }
-        else{
-            $inspection = Inspection::findOrFail($request->id);
-       
-            $update_lot = DB::table('events')
-            ->where('inspection_id', $inspection->id )
-            ->update(['title' => $inspection->titre, 'start' => $request->date , 
-            'end' => $request->date]);
-        }
-
+    
+    public function postCreateStep1(Request $request){  
         $request->validate([
             'titre' => 'required',
             'date' => 'required',
             'description' => 'required',
             'productimg' => 'image|mimes:jpeg,png,jpg,gif,svg',
             'produit' => 'required',
-            'caracteristique' => 'required',
+            'caracteristiquep' => 'required',
             'quantite' => ['required','integer'],
             'test' => 'required'
         ]);
+        if(empty($request->id)){
+            $inspection = new Inspection();
+        }
+        else{
+            $inspection = Inspection::findOrFail($request->id);
+        }
+
+        if(empty($inspection->lot)){
+            $lot = new Lot();
+        }
+        else{
+            $lot = Lot::findOrFail($inspection->lot_id);
+        }
+
+        $lot->quantite = $request->quantite;
+        $lot->produit_id = $request->produit;
+        $lot->caracteristiquep = $request->caracteristiquep;
+        $lot->save(); 
+        $inspection->lot_id = $lot->id;               
 
         $inspection->titre = $request->titre;
         $inspection->description = $request->description;
-        $lot_id = DB::table('lots')->insertGetId(
-            ['quantite' => $request->quantite, 'caracteristiquep' => $request->caracteristique ,'produit_id' => $request->produit]
-        ); 
-        $inspection->lot_id = $lot_id;
         $inspection->test_id = $request->test; 
         $inspection->user_id = Auth::user()->id; // Id de l'utilisateur authentifie
-        if($request->productimg != NULL){
-            $fileName = "productImage-" . time() . '.' . request()->productimg->getClientOriginalExtension();
-            $request->productimg->storeAs('productimg', $fileName);
+        if(!empty($request->productimg)){
+            $fileName = "lot-" . time() . '.' . request()->productimg->getClientOriginalExtension();
+            $request->productimg->storeAs('lotImage', $fileName);
             $inspection->productimg = $fileName;
-        }    
+        } else{
+            $inspection->productImg = null;
+        }
+
         $inspection->etat="nouveau";
         $inspection->step = 2;
         $test_id = $inspection->test_id;
         $inspection->save();
-
-        // associer event to inspection
-       if(empty($request->id)){
+        
+        if(empty($request->id)){
             $event = new Event();
             $event->title = $inspection->titre;
             $event->start = $request->date;
             $event->end = $request->date;
             $event->type = 'Inspection';
             $event->inspection_id = $inspection->id;
-            $event->save();    
+            $event->save(); 
+        }
+        else{
+            $update_event = DB::table('events')
+            ->where('inspection_id', $inspection->id )
+            ->update(['title' => $inspection->titre, 'start' => $request->date , 
+            'end' => $request->date]); 
         }
         $examens = Examen::where('test_id', '=' , $test_id )->get();
         $produits = Produit::where('type', '=' , 'Fini' )->get();
@@ -101,7 +123,7 @@ class InspectionController extends Controller
         $inspection = Inspection::findOrFail($request->id);   
         $result = "Les réponses des examens sont toutes correctes";
         
-        if ( !empty($request->ReponsesEtat)){
+        if (!empty($request->ReponsesEtat)){
             for ($i=0; $i < count($request->ReponsesEtat) ; $i++) { 
                 if ($request->ReponsesEtat[$i] =="Incorrect"){
                     $result = "Les réponses des examens ne sont pas toutes correctes";     
@@ -127,48 +149,61 @@ class InspectionController extends Controller
         return view('quality.inspection.create',compact('produits','inspection','examens'));
     }
 
-  /*public function removeImage(Request $request)
-    { 
-        $inspection->productimg = null;
-        return view('inspection.create-step1');
-    }*/
 
     public function store(Request $request){
-        $inspection = Inspection::findOrFail($request->id);
-        
+
         $request->validate([
-            'quantiteD' => ['required','integer']
+            'quantiteD' => 'integer',  
         ]);
 
+        $inspection = Inspection::findOrFail($request->id);
         if (!empty($request->commentaire)){
             $inspection->commentaire = $request->commentaire;       
         }
 
-        $inspection->quantiteD = $request->quantiteD;   
+        if (!empty($request->quantiteD)){
+            $inspection->quantiteD = $request->quantiteD;
+        } 
+        else{
+            $inspection->quantiteD  = 0;
+        }
+
         $inspection->etat="traité";
         $inspection->step = 1;
         $inspection->save();
         
         if ($request->anomalie){
-            $lotA = DB::table('lots')->insertGetId(
-                [
-                    'quantite' => $request->quantiteD, 
-                    'caracteristiquep' => $inspection->lot->caracteristique ,
-                    'produit_id' => $inspection->lot->produit->id]
-            ); 
-           /* automaticly create an associated anomaly */
+            $lotA = DB::table('lots')->insertGetId([
+                'quantite' => $request->quantiteD, 
+                'caracteristiquep' => $inspection->lot->caracteristiquep,
+                'produit_id' => $inspection->lot->produit->id
+            ]); 
+            /* automaticly create an associated anomaly */
             $anomalie_id = DB::table('anomalies')->insertGetId([   
                 'lot_id' => $lotA,
+                'atelier_id' => 5, // atelier de controle dans le seeders
                 'test_id' => $inspection->test_id,
                 'type' => 'Retour production',              
                 'step' => 3,    
                 'etat' => "en cours",
-                'titre' => $inspection->titre. '-fromInspection',
+                'titre' => $inspection->titre. ' - De Inspection',
                 'description' => $inspection->description,
                 'resultats' => $inspection->resultats,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]); 
+
+            /* Associate an alert to anomaly */
+            $alert = new Alert;
+            $alert->type = 'Retour production';
+            $alert->description = $inspection->description; 
+            $alert->atelier_id = 5; // atelier de controle dans le seeders
+            $alert->sent = 1;
+            $alert->anomalie_id = $anomalie_id; 
+            $alert->etat = "en cours";
+            $alert->lot_id = $lotA; 
+            $alert->save();
+
             $reponses = Reponse::where('inspection_id', '=' , $inspection->id )->get();
             for ($i=0; $i < count($reponses) ; $i++) { 
                 $reponses[$i]->anomalie_id=  $anomalie_id;
@@ -205,6 +240,17 @@ class InspectionController extends Controller
         $examens = Examen::where('test_id', '=' , $test_id )->get();
         $produits = Produit::where('type', '=' , 'Fini' )->get();
         return view('quality.inspection.create',compact('produits','inspection','examens')); 
+    }
+    
+    function generate_pdf(Inspection $inspection) {
+
+        $pdf = PDF::loadView('pdf.ficheInspection', compact('inspection'));
+        return $pdf->stream('Fiche.pdf');
+    }
+
+    public function view(Inspection $inspection){
+             
+        return view('quality.inspection.view',compact('inspection'));
     }
 
 

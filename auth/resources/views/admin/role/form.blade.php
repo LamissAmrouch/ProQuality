@@ -92,7 +92,19 @@
                                             <button type="submit" class="btn btn-primary btn-addon sweet-success m-t-10">
                                             <i class="ti-save"></i>Enregistrer</button> 
                                         </div>
-                                    </div>  
+                                    </div>
+                                    @if($errors->any())
+                                        @foreach ($errors->all() as $error)
+                                            <div id="error-msg" style="display: none;"> {{ $error }}
+                                            </div> 
+                                            <script>
+                                                sweetAlert(
+                                                    "Erreur...", 
+                                                    document.getElementById('error-msg').innerText ,
+                                                    "error");
+                                            </script>
+                                        @endforeach                                   
+                                    @endif  
                                 </form>
                             </div>
                         </div>

@@ -36,10 +36,20 @@ class Model_Has_RolesTableSeeder extends Seeder
             'model_type' => 'App\User',
             'model_id' => 5,
         ]);
-        DB::table('model_has_roles')->insert([ /*reparateur est un user gestionnaire */
-            'role_id' => 2,
+        DB::table('model_has_roles')->insert([ /*reparateur est un user simple */
+            'role_id' => 3,
             'model_type' => 'App\User',
             'model_id' => 6,
+        ]);
+        DB::table('model_has_roles')->insert([ /*reparateur est un user simple */
+            'role_id' => 3,
+            'model_type' => 'App\User',
+            'model_id' => 7,
+        ]);
+        DB::table('model_has_roles')->insert([ /*reparateur est un user simple */
+            'role_id' => 3,
+            'model_type' => 'App\User',
+            'model_id' => 8,
         ]);
     }
 }

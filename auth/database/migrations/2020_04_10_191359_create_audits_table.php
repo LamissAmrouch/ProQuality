@@ -28,6 +28,7 @@ class CreateAuditsTable extends Migration
             $table->unsignedBigInteger('atelier_id')->nullable();
             $table->unsignedBigInteger('procede_id')->nullable();
             $table->timestamps();
+
         });
     }
 
@@ -38,6 +39,12 @@ class CreateAuditsTable extends Migration
      */
     public function down()
     {
+        /*Schema::table('alerts', function (Blueprint $table) {
+            $table->dropForeign('alerts_event_id_foreign');
+            $table->dropColumn('event_id');
+            $table->dropForeign('alerts_anomalie_id_foreign');
+            $table->dropColumn('anomalie_id');
+        }); */
         Schema::dropIfExists('audits');
     }
 }

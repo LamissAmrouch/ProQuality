@@ -84,11 +84,10 @@
                                                     <div class="col-md-5">
                                                         <input id="date" type="datetime-local" class="form-control" name="date" 
                                                         @if(isset($audit))
-                                                        @foreach(App\Models\Event::all() as $event)
-                                                        @if($event->audit_id == $audit->id)
-                                                        value="{{ date('Y-m-d\TH:i', strtotime($event->start)) }}"
-                                                        @endif
-                                                        @endforeach
+                                                            <?php
+                                                                $event = App\Models\Event::where('audit_id', '=' , $audit->id)->first();
+                                                            ?>
+                                                            value="{{ date('Y-m-d\TH:i', strtotime($event->start)) }}"
                                                         @endif 
                                                         required autocomplete="date" autofocus>                                 
                                                      </div>
@@ -99,11 +98,7 @@
                                                     <div class="row">
                                                         <label for="description" class="text-right p-t-10 col-md-4">{{ __('Description') }}</label>
                                                         <div class="col-md-5">
-                                                        <textarea name="description" class="form-control" rows="3" required autofocus>  
-                                                               @if(isset($audit->description))
-                                                                   {{ $audit->description }} 
-                                                                @endif
-                                                        </textarea>
+                                                        <textarea name="description" class="form-control" rows="3" required autofocus>@if(isset($audit->description)){{$audit->description}}@endif</textarea>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -248,15 +243,37 @@
                                                         </div>
                                                     </div> 
 
+
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <label for="regles" class="text-right p-t-10 col-md-4">{{ __('Règles de qualité') }}</label>
+                                                            <div class="col-md-5">
+                                                                <select id="regles" class="form-control" name="regles[]" multiple>
+                                                                    <option value="" disabled selected>Choisir les règles qualité</option>
+                                                                    @isset($audit->procede)
+                                                                            @foreach(App\Models\Regle::where('produit_id', '=' , $audit->procede->produit->id)->get() as $regle)
+                                                                                <option value="{{ $regle->id }}"   
+                                                                                    @if(isset($audit) && $audit->regles->contains($regle))
+                                                                                        selected
+                                                                                    @endif>
+                                                                                    {{ $regle->titre }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                    @endisset
+                                                                </select>
+                                                                <div class="text-right">
+                                                                <button type="button" class="btn btn-info btn-addon m-b-10" data-toggle="modal" id="modal-toggle" 
+                                                                data-target="#modalAddRegle"><i class="ti-plus"></i>Créer une règle</button></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
                                                     <div class="form-group">
                                                     <div class="row">
                                                         <label for="commentaire" class="text-right p-t-10 col-md-4">{{ __('Commentaire') }}</label>
                                                         <div class="col-md-5">
-                                                        <textarea name="commentaire" class="form-control" rows="3"  autofocus>  
-                                                                    @if(isset($audit))
-                                                                       {{ $audit->commentaire }}
-                                                                    @endif
-                                                        </textarea>
+                                                        <textarea name="commentaire" class="form-control" rows="3"  autofocus>@if(isset($audit)){{$audit->commentaire}}@endif</textarea>
                                                         </div>
                                                     </div>
                                                     </div>
@@ -353,15 +370,62 @@
                             </div>
                             </div>
                             </div>
+ 
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>  
+        </div>  
+    </div> 
+
+        
+    <div class="modal fade" id="modalAddRegle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Ajouter une règle qualité</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="basic-form">                           
+                        <form id="AddRegleForm" action="{{ route('regle.store') }}" method="POST">
+                            {{ csrf_field() }}               
+                            @isset($audit)<input type="hidden" name="idAudit" class="form-control" value="{{ $audit->id }}" /> @endisset
+                            
+                            <div class="form-group">
+                            <div class="row">
+                                <label class="text-right p-t-10 col-md-2">Titre</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" name="titre" required>
+                            </div>
+                            </div>
+                            </div>
 
                             <div class="form-group">
                             <div class="row">
-                                <label class="text-right p-t-10 col-md-3">Matériel</label>
-                            <div class="col-md-9">
-                                <input type="text" class="form-control" name="materiel" id="materiel" required>
-                            </div>  
+                                <label  class="text-right p-t-10 col-md-2">Article </label>  
+                                <div class="col-md-10">                                         
+                                <select id="produit" class="form-control" name="produit"  required>
+                                    <option value="" disabled selected>Sélectionnez l'article</option>
+                                    @foreach(App\Models\Produit::all() as $produit)
+                                        <option value="{{ $produit->id }}">{{ $produit->nom }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            </div>  
+                            </div>
+                            </div>
+
+                            <div class="form-group">
+                            <div class="row">
+                                <label  class="text-right p-t-10 col-md-2">Contenu</label>
+                                <div class="col-md-10">
+                                <textarea name="contenu" class="form-control" rows="3" required></textarea>
+                            </div> 
+                            </div>
+                            </div>
 
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>

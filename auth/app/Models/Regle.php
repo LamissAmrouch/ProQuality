@@ -14,8 +14,14 @@ class Regle extends Model
        return $this->belongsToMany('App\Models\Anomalie');
     }
 
-    public function produit(){
+    public function produit()
+    {
        return $this->belongsTo('App\Models\Produit');
+    }
+
+    public function audits()
+    {
+       return $this->belongsToMany('App\Models\Audit');
     }
     
 

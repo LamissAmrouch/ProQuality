@@ -41,5 +41,10 @@ class Audit extends Model
     {
         return $this->hasMany('App\Models\Questionnaire');
     }
+
+    public function regles()
+    {
+       return $this->belongsToMany('App\Models\Regle');
+    }
     
 }
